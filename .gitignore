@@ -1,0 +1,71 @@
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.eslintcache
+
+# Vite / build
+dist/
+.vite/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+.env.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage
+coverage/
+*.lcov
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+/.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Misc
+.pnp/
+.pnp.*
+/.history/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
