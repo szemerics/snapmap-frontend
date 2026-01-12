@@ -4,8 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import api from "@/api/api"
+import { Link, useNavigate } from "react-router"
 
 const LoginForm = () => {
+  const navigate = useNavigate()
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -18,6 +20,8 @@ const LoginForm = () => {
       const { access_token } = response.data
 
       localStorage.setItem("access_token", access_token)
+
+      navigate("/")
     } catch (error: any) {
       if (error.response?.status === 401) {
         alert("Invalid email or password")
@@ -25,6 +29,11 @@ const LoginForm = () => {
         alert("An error occurred. Please try again.")
       }
     }
+  }
+
+  if (localStorage.getItem("access_token")) {
+    navigate("/")
+    return null
   }
 
   return (
@@ -59,7 +68,7 @@ const LoginForm = () => {
               <Field>
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <Link to="/register">Sign up</Link>
                 </FieldDescription>
               </Field>
             </FieldGroup>

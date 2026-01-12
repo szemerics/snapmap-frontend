@@ -1,14 +1,18 @@
-import LoginForm from "./components/login-form/login-form"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { ThemeProvider } from "./components/theme/theme-provider"
+import HomePage from "./pages/HomePage"
+import AuthPage from "./pages/AuthPage"
+
+const router = createBrowserRouter([
+  { path: "/", element: <HomePage /> },
+  { path: "/login", element: <AuthPage mode="login" /> },
+  { path: "/register", element: <AuthPage mode="register" /> },
+])
 
 export function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="snapmap-ui-theme">
-      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-        <div className="w-full max-w-sm">
-          <LoginForm />
-        </div>
-      </div>
+      <RouterProvider router={router} />
     </ThemeProvider>
   )
 }

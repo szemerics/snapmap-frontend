@@ -5,6 +5,8 @@ const Auth = {
     axiosInstance.post("/auth/login", null, {
       params: { email, password },
     }),
+  register: (username: string, email: string, password: string) =>
+    axiosInstance.post("/auth/register", { username, email, password }),
 }
 
 const api = {
