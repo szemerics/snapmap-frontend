@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader } from "../ui/card"
 import { Avatar, AvatarImage } from "../ui/avatar"
-import DefaultPfp from "@/assets/default-pfp.svg"
 import type { IUser } from "@/interfaces/IUser"
 
 type ProfileCardProps = {
@@ -17,7 +16,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
             <span className="text-muted-foreground text-xs">Followers</span>
           </div>
           <Avatar size="lg">
-            <AvatarImage src={user.profile_picture_url ?? DefaultPfp}></AvatarImage>
+            <AvatarImage src={user.profile_picture_url}></AvatarImage>
           </Avatar>
           <div className="flex flex-col w-full">
             <span>543</span>

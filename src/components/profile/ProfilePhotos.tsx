@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { Dialog, DialogContent } from "../ui/dialog"
-// import type { IPhoto } from "@/interfaces/IPhoto"
+import Posts from "./Posts"
 
 type ProfilePhotosProps = {
   photoSummaries: { photo_id: string; photo_url: string }[]
@@ -8,42 +7,28 @@ type ProfilePhotosProps = {
 
 const ProfilePhotos = ({ photoSummaries }: ProfilePhotosProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
 
-  const handlePhotoClick = () => {
+  const handlePhotoClick = (index: number) => {
+    setSelectedIndex(index)
     setIsOpen(true)
   }
 
   return (
     <>
       <div className="w-full sm:max-w-sm sm:mx-auto grid grid-cols-3">
-        {photoSummaries.map((photo_summary) => (
+        {photoSummaries.map((photo_summary, index) => (
           <img
-            key={photo_summary.photo_id}
+            key={index}
             src={photo_summary.photo_url}
             alt="Profile photo"
             className="w-full h-auto border border-background object-cover aspect-square"
-            onClick={handlePhotoClick}
+            onClick={() => handlePhotoClick(index)}
           />
         ))}
       </div>
 
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <div className="overflow-y-auto max-h-screen">
-            {photoSummaries.map((photo_summary) => (
-              <img src={photo_summary.photo_url} alt="" />
-            ))}
-          </div>
-
-          {/* <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
-            <DialogDescription>
-              This action cannot be undone. This will permanently delete your account and remove your data from our
-              servers.
-            </DialogDescription>
-          </DialogHeader> */}
-        </DialogContent>
-      </Dialog>
+      <Posts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} />
     </>
   )
 }
