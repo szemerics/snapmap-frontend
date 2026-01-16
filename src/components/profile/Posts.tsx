@@ -6,6 +6,8 @@ import api from "@/api/api"
 import { Badge } from "../ui/badge"
 import { ChevronLeft, Heart, MessageCircle } from "lucide-react"
 import { Separator } from "../ui/separator"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
 
 type PostsProps = {
   isOpen: boolean
@@ -18,6 +20,7 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
   const postRef = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const [imagesLoaded, setImagesLoaded] = useState(false)
+  const isDesktop = useMediaQuery("(min-width: 768px)")
 
   useEffect(() => {
     async function fetchPosts() {
@@ -88,16 +91,39 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
     )
   }
 
+  if (isDesktop) {
+    return (
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent
+          className="w-screen h-screen max-w-none m-0 p-6 sm:rounded-lg rounded-none"
+          showCloseButton={false}
+        >
+          <div className="w-full flex justify-center items-center">
+            <DialogClose className="absolute left-6 cursor-pointer">
+              <ChevronLeft />
+            </DialogClose>
+            <span>Posts</span>
+          </div>
+          <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col scrollbar-hide">
+            {posts.map((post, index) => (
+              <>
+                <Post key={index} {...post} index={index} />
+                {index != posts.length - 1 ? <Separator className="my-4" /> : null}
+              </>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent
-        className="w-screen h-screen max-w-none m-0 p-6 sm:rounded-lg rounded-none"
-        showCloseButton={false}
-      >
-        <div className="w-full flex justify-center items-center">
-          <DialogClose className="absolute left-6">
+    <Drawer open={isOpen} onOpenChange={setIsOpen} direction="right">
+      <DrawerContent className="!w-screen h-screen max-w-none m-0 p-6 rounded-none">
+        <div className="w-full flex justify-center items-center mb-6">
+          <DrawerClose className="absolute left-6">
             <ChevronLeft />
-          </DialogClose>
+          </DrawerClose>
           <span>Posts</span>
         </div>
         <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col scrollbar-hide">
@@ -108,8 +134,8 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
             </>
           ))}
         </div>
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
