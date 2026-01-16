@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { ThemeProvider } from "./components/theme/theme-provider"
-// import HomePage from "./pages/HomePage"
 import AuthPage from "./pages/AuthPage"
 import ProfilePage from "./pages/ProfilePage"
 import { Navigate } from "react-router-dom"
 import type { ReactNode } from "react"
+import Navbar from "./components/Navbar"
+import FeedPage from "./pages/FeedPage"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -17,12 +18,25 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace />
   }
 
-  return <>{children}</>
+  return (
+    <>
+      {children}
+      <Navbar />
+    </>
+  )
 }
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: (
+      <ProtectedRoute>
+        <FeedPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/:username",
     element: (
       <ProtectedRoute>
         <ProfilePage />

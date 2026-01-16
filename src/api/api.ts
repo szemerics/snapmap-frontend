@@ -13,6 +13,7 @@ const Auth = {
 
 const User = {
   getCurrentUser: () => axiosInstance.get<IUser>("/users/me"),
+  getUserByUsername: (username: string) => axiosInstance.get<IUser>(`/users/${username}`),
 }
 
 const Photo = {
