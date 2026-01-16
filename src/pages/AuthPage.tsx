@@ -1,8 +1,8 @@
-import LoginForm from "@/components/login-forms/login-form"
-import RegisterForm from "@/components/login-forms/register-form"
-import TextLogo from "@/assets/TextLogo.svg"
-import MarkerLogo from "@/assets/MarkerLogo.svg"
-import GlowBackground from "@/assets/GlowBackground.png"
+import LoginForm from "@/components/login-forms/LoginForm"
+import RegisterForm from "@/components/login-forms/RegisterForm"
+import TextLogo from "@/assets/snapmap-logos/text-logo.svg"
+import MarkerLogo from "@/assets/snapmap-logos/marker-logo.svg"
+import GlowBackground from "@/assets/images/glow-background.png"
 
 interface AuthPageProps {
   mode: "login" | "register"
