@@ -16,7 +16,7 @@ const FeedPage = () => {
   }, [])
 
   return (
-    <div className="mt-16">
+    <div className="my-6">
       {posts.map((post, index) => (
         <div key={index}>
           <Post photo={post} />

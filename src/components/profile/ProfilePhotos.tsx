@@ -16,7 +16,7 @@ const ProfilePhotos = ({ photoSummaries }: ProfilePhotosProps) => {
 
   return (
     <>
-      <div className="w-full sm:max-w-sm sm:mx-auto grid grid-cols-3">
+      <div className="grid grid-cols-3">
         {photoSummaries.map((photo_summary, index) => (
           <img
             key={index}

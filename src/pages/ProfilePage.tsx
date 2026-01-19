@@ -26,7 +26,7 @@ const ProfilePage = () => {
   return (
     <>
       <ProfileCard user={currentUser} />
-      <ProfilePhotos photoSummaries={currentUser.photo_summaries} />
+      <ProfilePhotos photoSummaries={Array(5).fill(currentUser.photo_summaries).flat()} />
     </>
   )
 }

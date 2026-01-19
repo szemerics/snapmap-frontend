@@ -30,7 +30,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
   return (
     <>
-      <Card className="w-full sm:max-w-sm sm:mx-auto flex gap-1 sm:rounded-xl rounded-none">
+      <Card className="flex gap-1 sm:rounded-xl rounded-none">
         <CardHeader>{header()}</CardHeader>
         <CardContent className="text-muted-foreground text-center text-xs">{user.bio}</CardContent>
       </Card>

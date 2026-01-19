@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   return (
     <>
-      {children}
+      <div className="pb-18 w-full sm:max-w-sm sm:mx-auto sm:rounded-lg rounded-none">{children}</div>
       <Navbar />
     </>
   )

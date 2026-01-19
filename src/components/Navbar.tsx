@@ -16,7 +16,7 @@ const Navbar = () => {
   }, [])
 
   return (
-    <Card className="w-full sm:max-w-sm sm:mx-auto sm:rounded-lg rounded-none fixed bottom-0 left-0 right-0 z-50">
+    <Card className="w-full sm:max-w-sm sm:mx-auto rounded-none fixed bottom-0 left-0 right-0 z-50">
       <CardContent className="flex px-12 py-2 justify-between items-center">
         <SearchIcon />
         <Link to={"/"} className="cursor-pointer">

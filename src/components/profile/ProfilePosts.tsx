@@ -98,13 +98,13 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) =
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} direction="right">
       <DrawerContent className="w-screen! h-screen max-w-none rounded-none">
-        <div className="w-full flex justify-center items-center mb-6">
+        <div className="w-full flex justify-center items-center">
           <DrawerClose className="absolute left-6">
             <ChevronLeft />
           </DrawerClose>
-          <span>Posts</span>
+          <span className="my-5">Posts</span>
         </div>
-        <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
+        <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
           {buildPost()}
         </div>
       </DrawerContent>
