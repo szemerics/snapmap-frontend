@@ -17,7 +17,7 @@ const ProfilePage = () => {
     }
 
     fetchProfile()
-  }, [username, targetUser])
+  }, [username])
 
   if (!targetUser) {
     return <Spinner className="size-8" />
