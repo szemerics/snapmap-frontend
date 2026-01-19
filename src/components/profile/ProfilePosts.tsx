@@ -1,21 +1,20 @@
-import { Avatar, AvatarImage } from "../ui/avatar"
 import { useEffect, useRef, useState } from "react"
 import { Dialog, DialogClose, DialogContent } from "../ui/dialog"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import api from "@/api/api"
-import { Badge } from "../ui/badge"
-import { ChevronLeft, Heart, MessageCircle } from "lucide-react"
+import { ChevronLeft } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
+import Post from "../Post"
 
-type PostsProps = {
+type ProfilePostsProps = {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
   selectedIndex: number
 }
 
-const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
+const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) => {
   const [posts, setPosts] = useState<IPhoto[]>([])
   const postRef = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -52,42 +51,26 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
     }
   }, [isOpen, posts, selectedIndex, imagesLoaded])
 
-  const Post = ({ user_summary, photo_url, category, caption, likes, index, comments }: IPhoto & { index: number }) => {
-    const handleImageLoad = () => {
-      if (index === selectedIndex) {
-        setImagesLoaded(true)
-      }
-    }
-
+  const buildPost = () => {
     return (
-      <div
-        ref={(element) => {
-          postRef.current[index] = element
-        }}
-        className="flex flex-col gap-3"
-      >
-        <div className="flex items-center justify-between">
-          <div className=" flex gap-2 items-center">
-            <Avatar size="sm">
-              <AvatarImage src={user_summary.profile_picture_url} />
-            </Avatar>
-            {user_summary.username}
+      <>
+        {posts.map((post, index) => (
+          <div key={index}>
+            <Post
+              photo={post}
+              onImageLoad={() => {
+                if (index === selectedIndex) {
+                  setImagesLoaded(true)
+                }
+              }}
+              ref={(element) => {
+                postRef.current[index] = element
+              }}
+            />
+            {index != posts.length - 1 ? <Separator className="my-6" /> : null}
           </div>
-          <Badge variant={"secondary"} className="capitalize">
-            {category}
-          </Badge>
-        </div>
-        <img src={photo_url} alt="" className="w-full h-auto object-contain" onLoad={handleImageLoad} />
-        <div className="flex gap-3">
-          <div className="flex gap-1 items-center">
-            <Heart size={20} /> {likes}
-          </div>
-          <div className="flex gap-1 items-center">
-            <MessageCircle size={20} /> {Array.isArray(comments) ? comments.length : 0}
-          </div>
-        </div>
-        <span>{caption}</span>
-      </div>
+        ))}
+      </>
     )
   }
 
@@ -104,13 +87,8 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
             </DialogClose>
             <span>Posts</span>
           </div>
-          <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col scrollbar-hide">
-            {posts.map((post, index) => (
-              <>
-                <Post key={index} {...post} index={index} />
-                {index != posts.length - 1 ? <Separator className="my-4" /> : null}
-              </>
-            ))}
+          <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
+            {buildPost()}
           </div>
         </DialogContent>
       </Dialog>
@@ -119,24 +97,19 @@ const Posts = ({ isOpen, setIsOpen, selectedIndex }: PostsProps) => {
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} direction="right">
-      <DrawerContent className="!w-screen h-screen max-w-none m-0 p-6 rounded-none">
+      <DrawerContent className="w-screen! h-screen max-w-none rounded-none">
         <div className="w-full flex justify-center items-center mb-6">
           <DrawerClose className="absolute left-6">
             <ChevronLeft />
           </DrawerClose>
           <span>Posts</span>
         </div>
-        <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col scrollbar-hide">
-          {posts.map((post, index) => (
-            <>
-              <Post key={index} {...post} index={index} />
-              {index != posts.length - 1 ? <Separator className="my-4" /> : null}
-            </>
-          ))}
+        <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
+          {buildPost()}
         </div>
       </DrawerContent>
     </Drawer>
   )
 }
 
-export default Posts
+export default ProfilePosts

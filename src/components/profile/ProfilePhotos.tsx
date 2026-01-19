@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Posts from "./Posts"
+import ProfilePosts from "./ProfilePosts"
 
 type ProfilePhotosProps = {
   photoSummaries: { photo_id: string; photo_url: string }[]
@@ -28,7 +28,7 @@ const ProfilePhotos = ({ photoSummaries }: ProfilePhotosProps) => {
         ))}
       </div>
 
-      <Posts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} />
+      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} />
     </>
   )
 }
