@@ -8,25 +8,25 @@ import { useParams } from "react-router-dom"
 
 const ProfilePage = () => {
   const { username } = useParams()
-  const [currentUser, setCurrentUser] = useState<IUser>()
+  const [targetUser, setTargetUser] = useState<IUser>()
 
   useEffect(() => {
     async function fetchProfile() {
       const user: IUser = await api.User.getUserByUsername(username!).then((res) => res.data)
-      setCurrentUser(user)
+      setTargetUser(user)
     }
 
     fetchProfile()
-  }, [])
+  }, [username, targetUser])
 
-  if (!currentUser) {
+  if (!targetUser) {
     return <Spinner className="size-8" />
   }
 
   return (
     <>
-      <ProfileCard user={currentUser} />
-      <ProfilePhotos photoSummaries={Array(5).fill(currentUser.photo_summaries).flat()} />
+      <ProfileCard user={targetUser} />
+      <ProfilePhotos photoSummaries={targetUser.photo_summaries} username={targetUser.username} />
     </>
   )
 }

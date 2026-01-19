@@ -14,12 +14,12 @@ const Post = forwardRef<HTMLDivElement, PostProps>(({ photo, onImageLoad }, ref)
   return (
     <div ref={ref} className="flex flex-col gap-3">
       <div className="flex items-center justify-between px-4">
-        <div className=" flex gap-2 items-center">
+        <Link to={`/${photo.user_summary.username}`} className=" flex gap-2 items-center">
           <Avatar size="sm">
             <AvatarImage src={photo.user_summary.profile_picture_url} />
           </Avatar>
-          <Link to={`/${photo.user_summary.username}`}>{photo.user_summary.username}</Link>
-        </div>
+          {photo.user_summary.username}
+        </Link>
         <Badge variant={"secondary"} className="capitalize">
           {photo.category}
         </Badge>

@@ -12,9 +12,10 @@ type ProfilePostsProps = {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
   selectedIndex: number
+  username: string
 }
 
-const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) => {
+const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePostsProps) => {
   const [posts, setPosts] = useState<IPhoto[]>([])
   const postRef = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,12 +24,12 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) =
 
   useEffect(() => {
     async function fetchPosts() {
-      const data = await api.Photo.getUserPhotos().then((res) => res.data)
+      const data = await api.Photo.getUserPhotos(username).then((res) => res.data)
       setPosts(data)
       setImagesLoaded(false)
     }
     fetchPosts()
-  }, [])
+  }, [username])
 
   useEffect(() => {
     if (isOpen && posts.length > 0 && selectedIndex >= 0 && selectedIndex < posts.length && imagesLoaded) {
@@ -51,28 +52,26 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) =
     }
   }, [isOpen, posts, selectedIndex, imagesLoaded])
 
-  const buildPost = () => {
-    return (
-      <>
-        {posts.map((post, index) => (
-          <div key={index}>
-            <Post
-              photo={post}
-              onImageLoad={() => {
-                if (index === selectedIndex) {
-                  setImagesLoaded(true)
-                }
-              }}
-              ref={(element) => {
-                postRef.current[index] = element
-              }}
-            />
-            {index != posts.length - 1 ? <Separator className="my-6" /> : null}
-          </div>
-        ))}
-      </>
-    )
-  }
+  const BuildPost = () => (
+    <>
+      {posts.map((post, index) => (
+        <div key={index}>
+          <Post
+            photo={post}
+            onImageLoad={() => {
+              if (index === selectedIndex) {
+                setImagesLoaded(true)
+              }
+            }}
+            ref={(element) => {
+              postRef.current[index] = element
+            }}
+          />
+          {index != posts.length - 1 ? <Separator className="my-6" /> : null}
+        </div>
+      ))}
+    </>
+  )
 
   if (isDesktop) {
     return (
@@ -88,7 +87,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) =
             <span>Posts</span>
           </div>
           <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
-            {buildPost()}
+            <BuildPost />
           </div>
         </DialogContent>
       </Dialog>
@@ -105,7 +104,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex }: ProfilePostsProps) =
           <span className="my-5">Posts</span>
         </div>
         <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
-          {buildPost()}
+          <BuildPost />
         </div>
       </DrawerContent>
     </Drawer>

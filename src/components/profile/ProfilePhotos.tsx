@@ -3,9 +3,10 @@ import ProfilePosts from "./ProfilePosts"
 
 type ProfilePhotosProps = {
   photoSummaries: { photo_id: string; photo_url: string }[]
+  username: string
 }
 
-const ProfilePhotos = ({ photoSummaries }: ProfilePhotosProps) => {
+const ProfilePhotos = ({ photoSummaries, username }: ProfilePhotosProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number>(-1)
 
@@ -28,7 +29,7 @@ const ProfilePhotos = ({ photoSummaries }: ProfilePhotosProps) => {
         ))}
       </div>
 
-      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} />
+      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} username={username} />
     </>
   )
 }
