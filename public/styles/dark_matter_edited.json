@@ -131,7 +131,7 @@
       "layout": {
         "symbol-placement": "line",
         "symbol-spacing": 500,
-        "text-field": "{name:en}\n{name:nonlatin}",
+        "text-field": "{name:latin}\n{name:nonlatin}",
         "text-font": ["Metropolis Medium Italic", "Noto Sans Italic"],
         "text-rotation-alignment": "map",
         "text-size": 12
@@ -631,7 +631,7 @@
       "layout": {
         "symbol-placement": "line",
         "symbol-spacing": 350,
-        "text-field": "{name:en} {name:nonlatin}",
+        "text-field": "{name:latin} {name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-max-angle": 30,
         "text-pitch-alignment": "viewport",
@@ -734,7 +734,7 @@
       "filter": ["all", ["==", "$type", "Point"], ["in", "class", "hamlet", "isolated_dwelling", "neighbourhood"]],
       "layout": {
         "text-anchor": "center",
-        "text-field": "{name:en}\n{name:nonlatin}",
+        "text-field": "{name:latin}\n{name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-justify": "center",
         "text-offset": [0.5, 0],
@@ -760,7 +760,7 @@
       "filter": ["all", ["==", "$type", "Point"], ["==", "class", "suburb"]],
       "layout": {
         "text-anchor": "center",
-        "text-field": "{name:en}\n{name:nonlatin}",
+        "text-field": "{name:latin}\n{name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-justify": "center",
         "text-offset": [0.5, 0],
@@ -787,7 +787,7 @@
       "layout": {
         "icon-size": 0.4,
         "text-anchor": "left",
-        "text-field": "{name:en}\n{name:nonlatin}",
+        "text-field": "{name:latin}\n{name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-justify": "left",
         "text-offset": [0.5, 0.2],
@@ -828,7 +828,7 @@
             [8, "center"]
           ]
         },
-        "text-field": "{name:en}\n{name:nonlatin}",
+        "text-field": "{name:latin}\n{name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-justify": "left",
         "text-offset": [0.5, 0.2],
@@ -869,7 +869,7 @@
             [8, "center"]
           ]
         },
-        "text-field": "{name:en}{name:nonlatin}",
+        "text-field": "{name:latin}{name:nonlatin}",
         "text-font": ["Metropolis Regular", "Noto Sans Regular"],
         "text-justify": "left",
         "text-offset": [0.5, 0.2],
@@ -935,7 +935,7 @@
       "maxzoom": 8,
       "filter": ["all", ["==", "$type", "Point"], ["==", "class", "country"], ["!has", "iso_a2"]],
       "layout": {
-        "text-field": "{name:en}",
+        "text-field": "{name:latin}",
         "text-font": ["Metropolis Light Italic", "Noto Sans Italic"],
         "text-size": {
           "base": 1,
