@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom"
 import type { ReactNode } from "react"
 import Navbar from "./components/Navbar"
 import FeedPage from "./pages/FeedPage"
+import MapPage from "./pages/MapPage"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ProfilePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/map",
+    element: (
+      <ProtectedRoute>
+        <MapPage />
       </ProtectedRoute>
     ),
   },

@@ -22,7 +22,9 @@ const Navbar = () => {
         <Link to={"/"} className="cursor-pointer">
           <GalleryVerticalEnd />
         </Link>
-        <MapPin />
+        <Link to={"/map"} className="cursor-pointer">
+          <MapPin />
+        </Link>
         <Link to={`/${username}`} className="cursor-pointer">
           <UserCircle />
         </Link>
