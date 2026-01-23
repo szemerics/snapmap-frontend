@@ -19,6 +19,7 @@ const User = {
 const Photo = {
   getUserPhotos: (username?: string) => axiosInstance.get<IPhoto[]>("/photos/user-photos", { params: { username } }),
   getAllPhotos: () => axiosInstance.get<IPhoto[]>("/photos"),
+  getPhotoById: (photo_id: string) => axiosInstance.get<IPhoto>(`/photos/${photo_id}`),
 }
 
 const api = {

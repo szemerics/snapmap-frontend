@@ -27,13 +27,14 @@ const Post = forwardRef<HTMLDivElement, PostProps>(({ photo, onImageLoad }, ref)
       <img src={photo.photo_url} alt="" className="w-full h-auto object-contain" onLoad={onImageLoad} />
       <div className="flex gap-3 px-4">
         <div className="flex gap-1 items-center">
-          <Heart size={20} /> {photo.likes}
+          <Heart size={20} className="mb-0.5" /> <span className="text-xs">{photo.likes}</span>
         </div>
         <div className="flex gap-1 items-center">
-          <MessageCircle size={20} /> {Array.isArray(photo.comments) ? photo.comments.length : 0}
+          <MessageCircle size={20} className="mb-0.5" />{" "}
+          <span className="text-xs">{Array.isArray(photo.comments) ? photo.comments.length : 0}</span>
         </div>
       </div>
-      <span className="px-4">{photo.caption}</span>
+      <span className="px-4 text-sm">{photo.caption}</span>
     </div>
   )
 })
