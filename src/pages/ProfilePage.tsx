@@ -1,10 +1,10 @@
-import api from "@/api/api"
 import ProfileCard from "@/components/profile/ProfileCard"
 import ProfilePhotos from "@/components/profile/ProfilePhotos"
 import { Spinner } from "@/components/ui/spinner"
 import type { IUser } from "@/interfaces/IUser"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { userService } from "@/services/user.service"
 
 const ProfilePage = () => {
   const { username } = useParams()
@@ -12,7 +12,8 @@ const ProfilePage = () => {
 
   useEffect(() => {
     async function fetchProfile() {
-      const user: IUser = await api.User.getUserByUsername(username!).then((res) => res.data)
+      const response = await userService.getUsers<IUser[]>({ username })
+      const user = response[0]
       setTargetUser(user)
     }
 

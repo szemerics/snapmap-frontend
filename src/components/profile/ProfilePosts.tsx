@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { Dialog, DialogClose, DialogContent } from "../ui/dialog"
 import type { IPhoto } from "@/interfaces/IPhoto"
-import api from "@/api/api"
 import { ChevronLeft } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
 import Post from "../Post"
+import { photoService } from "@/services/photo.service"
 
 type ProfilePostsProps = {
   isOpen: boolean
@@ -24,7 +24,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePos
 
   useEffect(() => {
     async function fetchPosts() {
-      const data = await api.Photo.getUserPhotos(username).then((res) => res.data)
+      const data = await photoService.getPhotos<IPhoto[]>({ username })
       setPosts(data)
       setImagesLoaded(false)
     }

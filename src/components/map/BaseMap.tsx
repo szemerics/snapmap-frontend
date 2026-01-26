@@ -1,9 +1,9 @@
-import api from "@/api/api"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { Map, Marker } from "@vis.gl/react-maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { useEffect, useState } from "react"
 import PhotoModal from "./PhotoModal"
+import { photoService } from "@/services/photo.service"
 
 const BaseMap = () => {
   const [photos, setPhotos] = useState<IPhoto[]>([])
@@ -12,15 +12,15 @@ const BaseMap = () => {
 
   useEffect(() => {
     async function fetchPhotos() {
-      const data: IPhoto[] = await api.Photo.getAllPhotos().then((res) => res.data)
+      const data = await photoService.getPhotos<IPhoto[]>()
       setPhotos(data)
     }
     fetchPhotos()
   }, [])
 
   const handlePhotoClick = async (photo_id: string) => {
-    const data: IPhoto = await api.Photo.getPhotoById(photo_id).then((res) => res.data)
-    setSelectedPhoto(data)
+    const data = await photoService.getPhotos<IPhoto[]>({ photo_id })
+    setSelectedPhoto(data[0])
     setIsOpen(true)
   }
 

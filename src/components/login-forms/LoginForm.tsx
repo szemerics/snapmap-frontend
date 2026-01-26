@@ -3,8 +3,8 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
-import api from "@/api/api"
 import { Link, useNavigate } from "react-router"
+import { authService } from "@/services/auth.service"
 
 const LoginForm = () => {
   const navigate = useNavigate()
@@ -16,8 +16,8 @@ const LoginForm = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await api.Auth.login(loginForm.email, loginForm.password)
-      const { access_token } = response.data
+      const response = await authService.login<{ access_token: string }>(loginForm)
+      const { access_token } = response
 
       localStorage.setItem("access_token", access_token)
 

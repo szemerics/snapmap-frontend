@@ -3,8 +3,8 @@ import { Button } from "../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
-import api from "@/api/api"
 import { Link, useNavigate } from "react-router"
+import { authService } from "@/services/auth.service"
 
 const RegisterForm = () => {
   const navigate = useNavigate()
@@ -18,7 +18,7 @@ const RegisterForm = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await api.Auth.register(registerForm.username, registerForm.email, registerForm.password)
+      await authService.register(registerForm)
       alert("Registration successful! Please log in.")
       navigate("/login")
     } catch (error: any) {

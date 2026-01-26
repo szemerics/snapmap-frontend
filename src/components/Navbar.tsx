@@ -2,14 +2,15 @@ import { MapPin, GalleryVerticalEnd, UserCircle, SearchIcon } from "lucide-react
 import { Card, CardContent } from "./ui/card"
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
-import api from "@/api/api"
+import { userService } from "@/services/user.service"
+import type { IUser } from "@/interfaces/IUser"
 
 const Navbar = () => {
   const [username, setUsername] = useState<string>("")
 
   useEffect(() => {
     async function fetchCurrentUser() {
-      const user = await api.User.getCurrentUser().then((res) => res.data)
+      const user = await userService.getMyUser<IUser>()
       setUsername(user.username)
     }
     fetchCurrentUser()

@@ -1,15 +1,15 @@
-import api from "@/api/api"
 import Post from "@/components/Post"
 import { Separator } from "@/components/ui/separator"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { useEffect, useState } from "react"
+import { photoService } from "@/services/photo.service"
 
 const FeedPage = () => {
   const [posts, setPosts] = useState<IPhoto[]>([])
 
   useEffect(() => {
     async function fetchPosts() {
-      const data: IPhoto[] = await api.Photo.getAllPhotos().then((res) => res.data)
+      const data = await photoService.getPhotos<IPhoto[]>()
       setPosts(data)
     }
     fetchPosts()
