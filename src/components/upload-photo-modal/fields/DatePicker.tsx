@@ -1,20 +1,21 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Field, FieldLabel } from "@/components/ui/field"
-import { useState } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 import type { UploadPhotoFormData } from "../types"
+import { handleUploadDataChange } from "../helpers"
 
 type DatePickerProps = {
   uploadData: UploadPhotoFormData
-  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
+  setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
 }
 
-const DatePicker = ({ uploadData, handleChange }: DatePickerProps) => {
+const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
   const [openDate, setOpenDate] = useState(false)
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +23,7 @@ const DatePicker = ({ uploadData, handleChange }: DatePickerProps) => {
       const date = new Date(uploadData.date_captured)
       const [hours, minutes, seconds] = e.target.value.split(":").map(Number)
       date.setHours(hours, minutes, seconds)
-      handleChange("date_captured", date.toISOString())
+      handleUploadDataChange(uploadData, setUploadData, "date_captured", date.toISOString())
     }
   }
 
@@ -44,7 +45,7 @@ const DatePicker = ({ uploadData, handleChange }: DatePickerProps) => {
               captionLayout="dropdown"
               defaultMonth={uploadData.date_captured ? new Date(uploadData.date_captured) : undefined}
               onSelect={(date) => {
-                handleChange("date_captured", date ? date.toISOString() : null)
+                handleUploadDataChange(uploadData, setUploadData, "date_captured", date ? date.toISOString() : null)
                 setOpenDate(false)
               }}
             />

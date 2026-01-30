@@ -13,13 +13,15 @@ import { Upload, X } from "lucide-react"
 import { useCallback } from "react"
 
 import type { UploadPhotoFormData } from "../types"
+import { handleUploadDataChange } from "../helpers"
+import type { Dispatch, SetStateAction } from "react"
 
 type FileUploaderProps = {
   uploadData: UploadPhotoFormData
-  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
+  setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
 }
 
-const FileUploader = ({ uploadData, handleChange }: FileUploaderProps) => {
+const FileUploader = ({ uploadData, setUploadData }: FileUploaderProps) => {
   const onFileValidate = useCallback(
     (file: File): string | null => {
       // Validate file type (only images)
@@ -39,7 +41,7 @@ const FileUploader = ({ uploadData, handleChange }: FileUploaderProps) => {
         accept="image/*"
         value={uploadData.imageFile ? [uploadData.imageFile] : []}
         onValueChange={(newFile) => {
-          handleChange("imageFile", newFile[0])
+          handleUploadDataChange(uploadData, setUploadData, "imageFile", newFile[0])
         }}
         onFileValidate={onFileValidate}
         disabled={!!uploadData.imageFile}
@@ -65,7 +67,7 @@ const FileUploader = ({ uploadData, handleChange }: FileUploaderProps) => {
               <FileUploadItemMetadata />
               <FileUploadItemDelete asChild>
                 <Button
-                  onClick={() => handleChange("imageFile", null as any)}
+                  onClick={() => handleUploadDataChange(uploadData, setUploadData, "imageFile", null as any)}
                   variant="ghost"
                   size="icon"
                   className="size-7"

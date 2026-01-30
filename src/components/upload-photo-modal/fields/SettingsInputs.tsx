@@ -2,16 +2,16 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { type Dispatch, type SetStateAction } from "react"
 import SelectOther from "./SelectOther"
 import { Input } from "@/components/ui/input"
-import { APERTURES, CAMERA_BRANDS, CAMERA_TYPES, SHUTTER_SPEEDS } from "@/constants/photoOptions"
+import { APERTURES, SHUTTER_SPEEDS } from "@/constants/photoOptions"
 import type { UploadPhotoFormData } from "../types"
+import { handleUploadDataChange } from "../helpers"
 
 type SettingsInputsProps = {
   uploadData: UploadPhotoFormData
   setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
-  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
 }
 
-const SettingsInputs = ({ uploadData, setUploadData, handleChange }: SettingsInputsProps) => {
+const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
   return (
     <>
       <Field>
@@ -21,7 +21,7 @@ const SettingsInputs = ({ uploadData, setUploadData, handleChange }: SettingsInp
           min="1"
           placeholder="100"
           value={uploadData.iso}
-          onChange={(e) => handleChange("iso", e.target.value)}
+          onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "iso", e.target.value)}
         />
       </Field>
       <Field>

@@ -25,7 +25,7 @@ const Navbar = () => {
         <Link to={"/"} className="cursor-pointer">
           <GalleryVerticalEnd />
         </Link>
-        <ImagePlus onClick={openUploadPhotoModal} />
+        <ImagePlus className="cursor-pointer" onClick={openUploadPhotoModal} />
         <Link to={"/map"} className="cursor-pointer">
           <MapPin />
         </Link>

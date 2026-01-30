@@ -4,14 +4,14 @@ import SelectOther from "./SelectOther"
 import { Input } from "@/components/ui/input"
 import { CAMERA_BRANDS, CAMERA_TYPES } from "@/constants/photoOptions"
 import type { UploadPhotoFormData } from "../types"
+import { handleUploadDataChange } from "../helpers"
 
 type GearInputsProps = {
   uploadData: UploadPhotoFormData
   setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
-  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
 }
 
-const GearInputs = ({ uploadData, setUploadData, handleChange }: GearInputsProps) => {
+const GearInputs = ({ uploadData, setUploadData }: GearInputsProps) => {
   return (
     <>
       <Field>
@@ -28,7 +28,7 @@ const GearInputs = ({ uploadData, setUploadData, handleChange }: GearInputsProps
         <Input
           placeholder="A6000"
           value={uploadData.camera_model}
-          onChange={(e) => handleChange("camera_model", e.target.value)}
+          onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "camera_model", e.target.value)}
         />
       </Field>
       <Field>
@@ -45,7 +45,7 @@ const GearInputs = ({ uploadData, setUploadData, handleChange }: GearInputsProps
         <Input
           placeholder="Nikkor 50mm f/1.8"
           value={uploadData.lens}
-          onChange={(e) => handleChange("lens", e.target.value)}
+          onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "lens", e.target.value)}
         />
       </Field>
       <Field>
@@ -53,7 +53,7 @@ const GearInputs = ({ uploadData, setUploadData, handleChange }: GearInputsProps
         <Input
           placeholder="External flash"
           value={uploadData.extra_attachment}
-          onChange={(e) => handleChange("extra_attachment", e.target.value)}
+          onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "extra_attachment", e.target.value)}
         />
       </Field>
     </>

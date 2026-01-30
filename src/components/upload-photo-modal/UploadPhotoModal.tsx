@@ -8,52 +8,38 @@ import DatePicker from "./fields/DatePicker"
 import { CATEGORIES } from "@/constants/photoOptions"
 import FileUploader from "./fields/FileUploader"
 import { Button } from "../ui/button"
-import CameraInputs from "./fields/GearInputs"
 import type { UploadPhotoFormData } from "./types"
-import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
 import GearInputs from "./fields/GearInputs"
 import SettingsInputs from "./fields/SettingsInputs"
+import { getDefaultUploadData, handleUploadDataChange } from "./helpers"
+import SmallMap from "./fields/SmallMap"
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
 
-  const [uploadData, setUploadData] = useState<UploadPhotoFormData>({
-    imageFile: null,
-    lat: 0,
-    lng: 0,
-    date_captured: new Date().toDateString(),
-    category: "",
-    camera_brand: "",
-    camera_model: "",
-    camera_type: "",
-    lens: "",
-    extra_attachment: "",
-    iso: 0,
-    shutter_speed: "",
-    aperture: "",
-    caption: "",
-  })
+  const [uploadData, setUploadData] = useState<UploadPhotoFormData>(getDefaultUploadData())
 
-  const handleChange = (field: string, value: any) => {
-    setUploadData({ ...uploadData, [field]: value })
+  const handleSubmit = () => {
+    console.log("submitted")
   }
 
   const uploadForm = (
-    <form onSubmit={() => console.log("submitted")}>
+    <form onSubmit={handleSubmit}>
       <FieldGroup>
         <Field>
           <FieldLabel>Image</FieldLabel>
-          <FileUploader uploadData={uploadData} handleChange={handleChange} />
+          <FileUploader uploadData={uploadData} setUploadData={setUploadData} />
         </Field>
 
         <Field>
           <FieldLabel>Location</FieldLabel>
+          <SmallMap />
         </Field>
 
         <FieldGroup className="flex-row">
-          <DatePicker uploadData={uploadData} handleChange={handleChange} />
+          <DatePicker uploadData={uploadData} setUploadData={setUploadData} />
         </FieldGroup>
 
         <Field>
@@ -71,7 +57,7 @@ const UploadPhotoModal = () => {
           <Textarea
             placeholder="Enter caption of post"
             value={uploadData.caption}
-            onChange={(e) => handleChange("caption", e.target.value)}
+            onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "caption", e.target.value)}
           />
         </Field>
 
@@ -79,14 +65,14 @@ const UploadPhotoModal = () => {
 
         <FieldGroup>
           <FieldLabel>Gear</FieldLabel>
-          <GearInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
+          <GearInputs uploadData={uploadData} setUploadData={setUploadData} />
         </FieldGroup>
 
         <Separator />
 
         <FieldGroup>
           <FieldLabel>Settings Used</FieldLabel>
-          <SettingsInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
+          <SettingsInputs uploadData={uploadData} setUploadData={setUploadData} />
         </FieldGroup>
 
         <Field>
@@ -96,8 +82,6 @@ const UploadPhotoModal = () => {
       </FieldGroup>
     </form>
   )
-
-  console.log(uploadData)
 
   return (
     <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom">
