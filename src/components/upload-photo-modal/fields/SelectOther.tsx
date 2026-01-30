@@ -1,14 +1,5 @@
-import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import { useState, type Dispatch, type SetStateAction } from "react"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../../ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
 import { Input } from "../../ui/input"
 
 import type { UploadPhotoFormData } from "../types"
@@ -49,14 +40,14 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
 
   const formatPlaceholder = (selectField: string) => {
     const formatted = selectField
-    return formatted[0].toLocaleUpperCase() + formatted.slice(1).replace("_", " ")
+    return formatted.replace("_", " ")
   }
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center text-base">
       <Select onValueChange={(value) => handleSelectChange(selectField, value)}>
         <SelectTrigger className={otherFields[selectField]?.isOther ? "w-1/3" : "w-full"}>
-          <SelectValue placeholder={`Select a ${formatPlaceholder(selectField)}`} />
+          <SelectValue placeholder={`Select ${formatPlaceholder(selectField)}`} />
         </SelectTrigger>
         <SelectContent className="max-h-80!" position="popper">
           <SelectGroup>

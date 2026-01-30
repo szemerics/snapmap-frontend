@@ -27,6 +27,7 @@ export const CAMERA_TYPES = [
 ] as const
 
 export const SHUTTER_SPEEDS = [
+  "Other",
   '30"s',
   '25"s',
   '20"s',
@@ -82,10 +83,10 @@ export const SHUTTER_SPEEDS = [
   "1/5000s",
   "1/6400s",
   "1/8000s",
-  "Other",
 ] as const
 
 export const APERTURES = [
+  "Other",
   "f/1.0",
   "f/1.1",
   "f/1.2",
@@ -114,7 +115,6 @@ export const APERTURES = [
   "f/18",
   "f/20",
   "f/22",
-  "Other",
 ] as const
 
 export const CATEGORIES = [

@@ -23,7 +23,11 @@ export interface IPhoto {
     lens: string
     extra_attachment: string
   }
-  settings_used: any | null
+  settings_used: {
+    iso: number
+    shutter_speed: string
+    aperture: string
+  }
   date_posted: string
   caption: string
   likes: number
@@ -47,7 +51,11 @@ export interface IUploadPhoto {
     lens: string
     extra_attachment: string
   }
-  settings_used: any | null
+  settings_used: {
+    iso: number
+    shutter_speed: string
+    aperture: string
+  }
   date_posted: string
   caption: string
 }

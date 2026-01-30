@@ -7,8 +7,10 @@ export type UploadPhotoFormData = {
   camera_brand: string
   camera_model: string
   camera_type: string
+  iso: number
+  shutter_speed: string
+  aperture: string
   lens: string
   extra_attachment: string
-  settings_used: any | null
   caption: string
 }

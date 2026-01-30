@@ -8,8 +8,13 @@ import DatePicker from "./fields/DatePicker"
 import { CATEGORIES } from "@/constants/photoOptions"
 import FileUploader from "./fields/FileUploader"
 import { Button } from "../ui/button"
-import CameraInputs from "./fields/CameraInputs"
+import CameraInputs from "./fields/GearInputs"
 import type { UploadPhotoFormData } from "./types"
+import { Input } from "../ui/input"
+import { Textarea } from "../ui/textarea"
+import { Separator } from "../ui/separator"
+import GearInputs from "./fields/GearInputs"
+import SettingsInputs from "./fields/SettingsInputs"
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
@@ -25,7 +30,9 @@ const UploadPhotoModal = () => {
     camera_type: "",
     lens: "",
     extra_attachment: "",
-    settings_used: null,
+    iso: 0,
+    shutter_speed: "",
+    aperture: "",
     caption: "",
   })
 
@@ -59,10 +66,27 @@ const UploadPhotoModal = () => {
           />
         </Field>
 
+        <Field>
+          <FieldLabel>Caption</FieldLabel>
+          <Textarea
+            placeholder="Enter caption of post"
+            value={uploadData.caption}
+            onChange={(e) => handleChange("caption", e.target.value)}
+          />
+        </Field>
+
+        <Separator />
+
         <FieldGroup>
           <FieldLabel>Gear</FieldLabel>
-          <FieldLabel>Camera</FieldLabel>
-          <CameraInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
+          <GearInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
+        </FieldGroup>
+
+        <Separator />
+
+        <FieldGroup>
+          <FieldLabel>Settings Used</FieldLabel>
+          <SettingsInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
         </FieldGroup>
 
         <Field>

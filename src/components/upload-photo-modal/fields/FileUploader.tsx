@@ -1,17 +1,14 @@
 import { Button } from "@/components/ui/button"
 import {
   FileUpload,
-  FileUploadClear,
   FileUploadDropzone,
   FileUploadItem,
   FileUploadItemDelete,
   FileUploadItemMetadata,
   FileUploadItemPreview,
-  FileUploadItemProgress,
   FileUploadList,
   FileUploadTrigger,
 } from "@/components/ui/file-upload"
-import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import { Upload, X } from "lucide-react"
 import { useCallback } from "react"
 
@@ -38,7 +35,7 @@ const FileUploader = ({ uploadData, handleChange }: FileUploaderProps) => {
   return (
     <>
       <FileUpload
-        className="w-full max-w-md"
+        className="w-full"
         accept="image/*"
         value={uploadData.imageFile ? [uploadData.imageFile] : []}
         onValueChange={(newFile) => {

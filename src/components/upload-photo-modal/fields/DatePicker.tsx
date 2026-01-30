@@ -1,12 +1,11 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Field, FieldLabel } from "@/components/ui/field"
-import { useState, type Dispatch } from "react"
+import { useState } from "react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { ChevronDownIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import type { IUploadPhoto } from "@/interfaces/IPhoto"
 
 import type { UploadPhotoFormData } from "../types"
 
