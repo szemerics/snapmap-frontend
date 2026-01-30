@@ -8,7 +8,7 @@ import Navbar from "./components/Navbar"
 import FeedPage from "./pages/FeedPage"
 import MapPage from "./pages/MapPage"
 import { UploadPhotoProvider } from "./context/UploadPhotoContext"
-import UploadPhotoModal from "./components/UploadPhotoModal"
+import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
 
 interface ProtectedRouteProps {
   children: ReactNode

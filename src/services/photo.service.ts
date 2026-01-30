@@ -11,7 +11,4 @@ export const photoService = {
   getPhotos<T>(params?: PhotoFilters): Promise<T> {
     return HttpService.get(apiRoutes.photos, { params })
   },
-  getPhotoOptions<T>(): Promise<T> {
-    return HttpService.get(apiRoutes.photoOptions)
-  },
 }

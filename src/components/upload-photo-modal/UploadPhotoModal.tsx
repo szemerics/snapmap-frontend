@@ -1,9 +1,9 @@
 import { useUploadPhotoContext } from "@/context/UploadPhotoContext"
-import { Drawer, DrawerClose, DrawerContent } from "./ui/drawer"
+import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
 import { Upload, X } from "lucide-react"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field"
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
+import { Input } from "../ui/input"
+import { Button } from "../ui/button"
 import { Link } from "react-router-dom"
 import { useCallback, useEffect, useState } from "react"
 import type { IUploadPhoto } from "@/interfaces/IPhoto"
@@ -18,12 +18,10 @@ import {
   FileUploadItemProgress,
   FileUploadList,
   FileUploadTrigger,
-} from "./ui/file-upload"
-import { photoService } from "@/services/photo.service"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
+} from "../ui/file-upload"
+import SelectOther from "./SelectOther"
 
 const UploadPhotoModal = () => {
-  const [photoOptions, setPhotoOptions] = useState<any>(null)
   const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
   const [uploadData, setUploadData] = useState<IUploadPhoto>({
     imageFile: null as any,
@@ -47,14 +45,6 @@ const UploadPhotoModal = () => {
     caption: "",
   })
 
-  useEffect(() => {
-    async function fetchPhotoOptions() {
-      const options = await photoService.getPhotoOptions<any>()
-      setPhotoOptions(options)
-    }
-    fetchPhotoOptions()
-  })
-
   const onFileValidate = useCallback(
     (file: File): string | null => {
       // Validate file type (only images)
@@ -67,11 +57,15 @@ const UploadPhotoModal = () => {
     [uploadData.imageFile]
   )
 
+  const handleChange = (field: keyof IUploadPhoto, value: any) => {
+    setUploadData({ ...uploadData, [field]: value })
+  }
+
   const handleImageRemove = () => {
     setUploadData({ ...uploadData, imageFile: null as any })
   }
 
-  const UploadForm = () => (
+  const uploadForm = (
     <form onSubmit={() => console.log("submitted")}>
       <FieldGroup>
         <Field>
@@ -80,8 +74,8 @@ const UploadPhotoModal = () => {
             className="w-full max-w-md"
             accept="image/*"
             value={uploadData.imageFile ? [uploadData.imageFile] : []}
-            onValueChange={(newFiles) => {
-              setUploadData({ ...uploadData, imageFile: newFiles[0] || null })
+            onValueChange={(newFile) => {
+              handleChange("imageFile", newFile[0])
             }}
             onFileValidate={onFileValidate}
             disabled={!!uploadData.imageFile}
@@ -122,28 +116,7 @@ const UploadPhotoModal = () => {
 
         <Field>
           <FieldLabel>Category</FieldLabel>
-          <Input
-            id="category"
-            type="category"
-            placeholder="trainspotting"
-            required
-            onChange={(e) => setUploadData({ ...uploadData, category: e.target.value })}
-          />
-          {/* <Select>
-            <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a fruit" />
-            </SelectTrigger>
-            <SelectContent className="z-50">
-              <SelectGroup>
-                <SelectLabel>Fruits</SelectLabel>
-                <SelectItem value="apple">Apple</SelectItem>
-                <SelectItem value="banana">Banana</SelectItem>
-                <SelectItem value="blueberry">Blueberry</SelectItem>
-                <SelectItem value="grapes">Grapes</SelectItem>
-                <SelectItem value="pineapple">Pineapple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select> */}
+          <SelectOther uploadData={uploadData} setUploadData={setUploadData} selectField="category" />
         </Field>
 
         {/* <Field>
@@ -165,9 +138,7 @@ const UploadPhotoModal = () => {
             <X />
           </DrawerClose>
         </div>
-        <div className="overflow-y-auto flex-1 px-6 py-4">
-          <UploadForm />
-        </div>
+        <div className="overflow-y-auto flex-1 px-6 py-4">{uploadForm}</div>
       </DrawerContent>
     </Drawer>
   )
