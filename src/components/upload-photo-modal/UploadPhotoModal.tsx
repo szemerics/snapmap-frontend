@@ -1,35 +1,24 @@
 import { useUploadPhotoContext } from "@/context/UploadPhotoContext"
 import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
-import { Upload, X } from "lucide-react"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
-import { Input } from "../ui/input"
-import { Button } from "../ui/button"
-import { Link } from "react-router-dom"
-import { useCallback, useEffect, useState } from "react"
+import { X } from "lucide-react"
+import { Field, FieldGroup, FieldLabel } from "../ui/field"
+import { useState } from "react"
 import type { IUploadPhoto } from "@/interfaces/IPhoto"
-import {
-  FileUpload,
-  FileUploadClear,
-  FileUploadDropzone,
-  FileUploadItem,
-  FileUploadItemDelete,
-  FileUploadItemMetadata,
-  FileUploadItemPreview,
-  FileUploadItemProgress,
-  FileUploadList,
-  FileUploadTrigger,
-} from "../ui/file-upload"
-import SelectOther from "./SelectOther"
+import SelectOther from "./fields/SelectOther"
+import DatePicker from "./fields/DatePicker"
+import { CAMERA_BRANDS, CATEGORIES } from "@/constants/photoOptions"
+import FileUploader from "./fields/FileUploader"
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
+
   const [uploadData, setUploadData] = useState<IUploadPhoto>({
     imageFile: null as any,
     location: {
       lat: 0,
       lng: 0,
     },
-    date_captured: new Date().toISOString(),
+    date_captured: new Date().toDateString(),
     category: "",
     gear: {
       camera: {
@@ -45,24 +34,8 @@ const UploadPhotoModal = () => {
     caption: "",
   })
 
-  const onFileValidate = useCallback(
-    (file: File): string | null => {
-      // Validate file type (only images)
-      if (!file.type.startsWith("image/")) {
-        return "Only image files are allowed"
-      }
-
-      return null
-    },
-    [uploadData.imageFile]
-  )
-
   const handleChange = (field: keyof IUploadPhoto, value: any) => {
     setUploadData({ ...uploadData, [field]: value })
-  }
-
-  const handleImageRemove = () => {
-    setUploadData({ ...uploadData, imageFile: null as any })
   }
 
   const uploadForm = (
@@ -70,54 +43,46 @@ const UploadPhotoModal = () => {
       <FieldGroup>
         <Field>
           <FieldLabel>Image</FieldLabel>
-          <FileUpload
-            className="w-full max-w-md"
-            accept="image/*"
-            value={uploadData.imageFile ? [uploadData.imageFile] : []}
-            onValueChange={(newFile) => {
-              handleChange("imageFile", newFile[0])
-            }}
-            onFileValidate={onFileValidate}
-            disabled={!!uploadData.imageFile}
-          >
-            <FileUploadDropzone className={`${uploadData.imageFile ? "opacity-50 pointer-events-none" : " "}`}>
-              <div className="flex flex-col items-center gap-1 text-center">
-                <div className="flex items-center justify-center rounded-full border p-2.5">
-                  <Upload className="size-6 text-muted-foreground" />
-                </div>
-                <p className="font-medium text-sm">Drag & drop files here</p>
-                <p className="text-muted-foreground text-xs">Or click to browse (max 1 file)</p>
-              </div>
-              <FileUploadTrigger asChild>
-                <Button variant="outline" size="sm" className="mt-2 w-fit">
-                  Browse files
-                </Button>
-              </FileUploadTrigger>
-            </FileUploadDropzone>
-            <FileUploadList>
-              {uploadData.imageFile && (
-                <FileUploadItem value={uploadData.imageFile}>
-                  <FileUploadItemPreview />
-                  <FileUploadItemMetadata />
-                  <FileUploadItemDelete asChild>
-                    <Button onClick={handleImageRemove} variant="ghost" size="icon" className="size-7">
-                      <X />
-                    </Button>
-                  </FileUploadItemDelete>
-                </FileUploadItem>
-              )}
-            </FileUploadList>
-          </FileUpload>
+          <FileUploader uploadData={uploadData} handleChange={handleChange} />
         </Field>
 
         <Field>
           <FieldLabel>Location</FieldLabel>
         </Field>
 
+        <FieldGroup className="flex-row">
+          <DatePicker uploadData={uploadData} handleChange={handleChange} />
+        </FieldGroup>
+
         <Field>
           <FieldLabel>Category</FieldLabel>
-          <SelectOther uploadData={uploadData} setUploadData={setUploadData} selectField="category" />
+          <SelectOther
+            uploadData={uploadData}
+            setUploadData={setUploadData}
+            selectField="category"
+            constant={CATEGORIES}
+          />
         </Field>
+
+        {/* <FieldGroup>
+          <FieldLabel>Gear</FieldLabel>
+          <FieldLabel>Camera</FieldLabel>
+          <Field>
+            <FieldLabel>Brand</FieldLabel>
+            <SelectOther
+              uploadData={uploadData}
+              setUploadData={setUploadData}
+              selectField="brand"
+              constant={CAMERA_BRANDS}
+            />
+          </Field>
+          <Field>
+            <FieldLabel>Model</FieldLabel>
+          </Field>
+          <Field>
+            <FieldLabel>Type</FieldLabel>
+          </Field>
+        </FieldGroup> */}
 
         {/* <Field>
           <Button type="submit">Login</Button>
@@ -128,6 +93,8 @@ const UploadPhotoModal = () => {
       </FieldGroup>
     </form>
   )
+
+  console.log(uploadData)
 
   return (
     <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom">
