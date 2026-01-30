@@ -7,6 +7,8 @@ import type { ReactNode } from "react"
 import Navbar from "./components/Navbar"
 import FeedPage from "./pages/FeedPage"
 import MapPage from "./pages/MapPage"
+import { UploadPhotoProvider } from "./context/UploadPhotoContext"
+import UploadPhotoModal from "./components/UploadPhotoModal"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -59,7 +61,10 @@ const router = createBrowserRouter([
 export function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="snapmap-ui-theme">
-      <RouterProvider router={router} />
+      <UploadPhotoProvider>
+        <RouterProvider router={router} />
+        <UploadPhotoModal />
+      </UploadPhotoProvider>
     </ThemeProvider>
   )
 }

@@ -29,3 +29,25 @@ export interface IPhoto {
   likes: number
   comments: any | null
 }
+
+export interface IUploadPhoto {
+  imageFile: File
+  location: {
+    lat: number
+    lng: number
+  }
+  date_captured: string
+  category: string
+  gear: {
+    camera: {
+      brand: string
+      model: string
+      type: string
+    }
+    lens: string
+    extra_attachment: string
+  }
+  settings_used: any | null
+  date_posted: string
+  caption: string
+}
