@@ -8,9 +8,11 @@ import { ChevronDownIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import type { IUploadPhoto } from "@/interfaces/IPhoto"
 
+import type { UploadPhotoFormData } from "../types"
+
 type DatePickerProps = {
-  uploadData: IUploadPhoto
-  handleChange: (field: keyof IUploadPhoto, value: any) => void
+  uploadData: UploadPhotoFormData
+  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
 }
 
 const DatePicker = ({ uploadData, handleChange }: DatePickerProps) => {

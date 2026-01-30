@@ -11,11 +11,13 @@ import {
 } from "../../ui/select"
 import { Input } from "../../ui/input"
 
+import type { UploadPhotoFormData } from "../types"
+
 type SelectProps = {
-  uploadData: IUploadPhoto
-  setUploadData: Dispatch<SetStateAction<IUploadPhoto>>
-  selectField: keyof IUploadPhoto
-  constant: Readonly<string[]>
+  uploadData: UploadPhotoFormData
+  setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
+  selectField: keyof UploadPhotoFormData
+  constant: readonly string[]
 }
 
 const SelectOther = ({ uploadData, setUploadData, selectField, constant }: SelectProps) => {
@@ -45,15 +47,19 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
     setUploadData({ ...uploadData, [field]: value })
   }
 
+  const formatPlaceholder = (selectField: string) => {
+    const formatted = selectField
+    return formatted[0].toLocaleUpperCase() + formatted.slice(1).replace("_", " ")
+  }
+
   return (
     <div className="flex gap-2 items-center">
       <Select onValueChange={(value) => handleSelectChange(selectField, value)}>
         <SelectTrigger className={otherFields[selectField]?.isOther ? "w-1/3" : "w-full"}>
-          <SelectValue placeholder={`Select a ${selectField}`} />
+          <SelectValue placeholder={`Select a ${formatPlaceholder(selectField)}`} />
         </SelectTrigger>
         <SelectContent className="max-h-80!" position="popper">
           <SelectGroup>
-            <SelectLabel>Categories</SelectLabel>
             {constant.map((selectField: string) => (
               <SelectItem value={selectField} className="mb-2">
                 {selectField}
@@ -65,7 +71,7 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
       {otherFields[selectField]?.isOther && (
         <Input
           className="w-2/3"
-          placeholder={`Enter custom ${selectField}`}
+          placeholder={`Enter custom ${formatPlaceholder(selectField)}`}
           value={otherFields[selectField]?.customValue || ""}
           onChange={(e) => handleCustomValueChange(selectField, e.target.value)}
         />

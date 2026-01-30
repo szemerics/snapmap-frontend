@@ -1,40 +1,35 @@
 import { useUploadPhotoContext } from "@/context/UploadPhotoContext"
 import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
 import { X } from "lucide-react"
-import { Field, FieldGroup, FieldLabel } from "../ui/field"
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { useState } from "react"
-import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import SelectOther from "./fields/SelectOther"
 import DatePicker from "./fields/DatePicker"
-import { CAMERA_BRANDS, CATEGORIES } from "@/constants/photoOptions"
+import { CATEGORIES } from "@/constants/photoOptions"
 import FileUploader from "./fields/FileUploader"
+import { Button } from "../ui/button"
+import CameraInputs from "./fields/CameraInputs"
+import type { UploadPhotoFormData } from "./types"
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
 
-  const [uploadData, setUploadData] = useState<IUploadPhoto>({
-    imageFile: null as any,
-    location: {
-      lat: 0,
-      lng: 0,
-    },
+  const [uploadData, setUploadData] = useState<UploadPhotoFormData>({
+    imageFile: null,
+    lat: 0,
+    lng: 0,
     date_captured: new Date().toDateString(),
     category: "",
-    gear: {
-      camera: {
-        brand: "",
-        model: "",
-        type: "",
-      },
-      lens: "",
-      extra_attachment: "",
-    },
+    camera_brand: "",
+    camera_model: "",
+    camera_type: "",
+    lens: "",
+    extra_attachment: "",
     settings_used: null,
-    date_posted: new Date().toISOString(),
     caption: "",
   })
 
-  const handleChange = (field: keyof IUploadPhoto, value: any) => {
+  const handleChange = (field: string, value: any) => {
     setUploadData({ ...uploadData, [field]: value })
   }
 
@@ -64,32 +59,16 @@ const UploadPhotoModal = () => {
           />
         </Field>
 
-        {/* <FieldGroup>
+        <FieldGroup>
           <FieldLabel>Gear</FieldLabel>
           <FieldLabel>Camera</FieldLabel>
-          <Field>
-            <FieldLabel>Brand</FieldLabel>
-            <SelectOther
-              uploadData={uploadData}
-              setUploadData={setUploadData}
-              selectField="brand"
-              constant={CAMERA_BRANDS}
-            />
-          </Field>
-          <Field>
-            <FieldLabel>Model</FieldLabel>
-          </Field>
-          <Field>
-            <FieldLabel>Type</FieldLabel>
-          </Field>
-        </FieldGroup> */}
+          <CameraInputs uploadData={uploadData} setUploadData={setUploadData} handleChange={handleChange} />
+        </FieldGroup>
 
-        {/* <Field>
-          <Button type="submit">Login</Button>
-          <FieldDescription className="text-center">
-            Don&apos;t have an account? <Link to="/register">Sign up</Link>
-          </FieldDescription>
-        </Field> */}
+        <Field>
+          <Button type="submit">Upload</Button>
+          <FieldDescription className="text-center">Uploading takes a while due to security checks</FieldDescription>
+        </Field>
       </FieldGroup>
     </form>
   )

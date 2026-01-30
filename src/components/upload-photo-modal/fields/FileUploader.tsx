@@ -15,9 +15,11 @@ import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import { Upload, X } from "lucide-react"
 import { useCallback } from "react"
 
+import type { UploadPhotoFormData } from "../types"
+
 type FileUploaderProps = {
-  uploadData: IUploadPhoto
-  handleChange: (field: keyof IUploadPhoto, value: any) => void
+  uploadData: UploadPhotoFormData
+  handleChange: (field: keyof UploadPhotoFormData, value: any) => void
 }
 
 const FileUploader = ({ uploadData, handleChange }: FileUploaderProps) => {
