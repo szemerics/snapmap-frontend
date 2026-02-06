@@ -106,7 +106,7 @@ const UploadPhotoModal = () => {
         <div className="w-full flex justify-between items-center px-6 py-4 border-b">
           <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
           <DrawerDescription className="sr-only">Upload your photo and details here</DrawerDescription>
-          <DrawerClose>
+          <DrawerClose className="cursor-pointer">
             <X />
           </DrawerClose>
         </div>
