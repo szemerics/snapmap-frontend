@@ -15,8 +15,10 @@ const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
   return (
     <>
       <Field>
-        <FieldLabel>ISO</FieldLabel>
+        <FieldLabel htmlFor="iso-input">ISO</FieldLabel>
         <Input
+          id="iso-input"
+          name="iso"
           type="number"
           min="1"
           placeholder="100"
@@ -25,7 +27,7 @@ const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
         />
       </Field>
       <Field>
-        <FieldLabel>Shutter Speed</FieldLabel>
+        <FieldLabel htmlFor="shutter_speed-input">Shutter Speed</FieldLabel>
         <SelectOther
           uploadData={uploadData}
           setUploadData={setUploadData}
@@ -34,7 +36,7 @@ const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
         />
       </Field>
       <Field>
-        <FieldLabel>Aperture</FieldLabel>
+        <FieldLabel htmlFor="aperture-input">Aperture</FieldLabel>
         <SelectOther
           uploadData={uploadData}
           setUploadData={setUploadData}

@@ -15,7 +15,7 @@ const GearInputs = ({ uploadData, setUploadData }: GearInputsProps) => {
   return (
     <>
       <Field>
-        <FieldLabel>Camera Brand</FieldLabel>
+        <FieldLabel htmlFor="camera_brand-input">Camera Brand</FieldLabel>
         <SelectOther
           uploadData={uploadData}
           setUploadData={setUploadData}
@@ -24,15 +24,17 @@ const GearInputs = ({ uploadData, setUploadData }: GearInputsProps) => {
         />
       </Field>
       <Field>
-        <FieldLabel>Camera Model</FieldLabel>
+        <FieldLabel htmlFor="camera-model-input">Camera Model</FieldLabel>
         <Input
+          id="camera-model-input"
+          name="camera_model"
           placeholder="A6000"
           value={uploadData.camera_model}
           onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "camera_model", e.target.value)}
         />
       </Field>
       <Field>
-        <FieldLabel>Camera Type</FieldLabel>
+        <FieldLabel htmlFor="camera_type-input">Camera Type</FieldLabel>
         <SelectOther
           uploadData={uploadData}
           setUploadData={setUploadData}
@@ -41,16 +43,20 @@ const GearInputs = ({ uploadData, setUploadData }: GearInputsProps) => {
         />
       </Field>
       <Field>
-        <FieldLabel>Lens</FieldLabel>
+        <FieldLabel htmlFor="lens-input">Lens</FieldLabel>
         <Input
+          id="lens-input"
+          name="lens"
           placeholder="Nikkor 50mm f/1.8"
           value={uploadData.lens}
           onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "lens", e.target.value)}
         />
       </Field>
       <Field>
-        <FieldLabel>Extra Attachment</FieldLabel>
+        <FieldLabel htmlFor="extra-attachment-input">Extra Attachment</FieldLabel>
         <Input
+          id="extra-attachment-input"
+          name="extra_attachment"
           placeholder="External flash"
           value={uploadData.extra_attachment}
           onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "extra_attachment", e.target.value)}

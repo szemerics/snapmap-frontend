@@ -37,6 +37,7 @@ const FileUploader = ({ uploadData, setUploadData }: FileUploaderProps) => {
   return (
     <>
       <FileUpload
+        id="image-upload"
         className="w-full"
         accept="image/*"
         value={uploadData.imageFile ? [uploadData.imageFile] : []}

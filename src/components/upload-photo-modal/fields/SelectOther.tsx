@@ -45,14 +45,14 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
 
   return (
     <div className="flex gap-2 items-center text-base">
-      <Select onValueChange={(value) => handleSelectChange(selectField, value)}>
-        <SelectTrigger className={otherFields[selectField]?.isOther ? "w-1/3" : "w-full"}>
+      <Select name={selectField} onValueChange={(value) => handleSelectChange(selectField, value)}>
+        <SelectTrigger id={`${selectField}-input`} className={otherFields[selectField]?.isOther ? "w-1/3" : "w-full"}>
           <SelectValue placeholder={`Select ${formatPlaceholder(selectField)}`} />
         </SelectTrigger>
         <SelectContent className="max-h-80!" position="popper">
           <SelectGroup>
-            {constant.map((selectField: string) => (
-              <SelectItem value={selectField} className="mb-2">
+            {constant.map((selectField: string, idx) => (
+              <SelectItem key={idx} value={selectField} className="mb-2">
                 {selectField}
               </SelectItem>
             ))}
@@ -61,6 +61,8 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
       </Select>
       {otherFields[selectField]?.isOther && (
         <Input
+          id={`${selectField}-custom-input`}
+          name={`${selectField}_custom`}
           className="w-2/3"
           placeholder={`Enter custom ${formatPlaceholder(selectField)}`}
           value={otherFields[selectField]?.customValue || ""}

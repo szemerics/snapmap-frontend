@@ -30,10 +30,15 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
   return (
     <>
       <Field>
-        <FieldLabel htmlFor="date-picker-optional">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-button">Date</FieldLabel>
         <Popover open={openDate} onOpenChange={setOpenDate}>
           <PopoverTrigger asChild>
-            <Button variant="outline" id="date-picker-optional" className="w-32 justify-between font-normal">
+            <Button
+              variant="outline"
+              id="date-picker-button"
+              name="date_captured"
+              className="w-32 justify-between font-normal"
+            >
               {uploadData.date_captured ? format(new Date(uploadData.date_captured), "PPP") : "Select date"}
               <ChevronDownIcon />
             </Button>
@@ -53,10 +58,11 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
         </Popover>
       </Field>
       <Field className="w-32">
-        <FieldLabel htmlFor="time-picker-optional">Time</FieldLabel>
+        <FieldLabel htmlFor="time-picker-input">Time</FieldLabel>
         <Input
           type="time"
-          id="time-picker-optional"
+          id="time-picker-input"
+          name="time"
           step="1"
           defaultValue="10:30:00"
           onChange={(e) => handleTimeChange(e)}

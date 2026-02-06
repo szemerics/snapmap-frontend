@@ -6,7 +6,7 @@ const SmallMap = () => {
   const [coordinates, setCoordinates] = useState({ lng: 20, lat: 50 })
 
   return (
-    <div className="w-full h-80 rounded-md overflow-hidden border relative">
+    <div id="location" className="w-full h-80 rounded-md overflow-hidden border relative">
       <Map
         initialViewState={{
           longitude: 20,
