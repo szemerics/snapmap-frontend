@@ -30,7 +30,9 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
   return (
     <>
       <Field>
-        <FieldLabel htmlFor="date-picker-button">Date</FieldLabel>
+        <FieldLabel htmlFor="date-picker-button">
+          Date <span className="text-destructive -ml-1">*</span>
+        </FieldLabel>
         <Popover open={openDate} onOpenChange={setOpenDate}>
           <PopoverTrigger asChild>
             <Button
@@ -58,7 +60,9 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
         </Popover>
       </Field>
       <Field className="w-32">
-        <FieldLabel htmlFor="time-picker-input">Time</FieldLabel>
+        <FieldLabel htmlFor="time-picker-input">
+          Time <span className="text-destructive -ml-1">*</span>
+        </FieldLabel>
         <Input
           type="time"
           id="time-picker-input"

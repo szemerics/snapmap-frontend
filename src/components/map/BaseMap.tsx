@@ -12,7 +12,7 @@ const BaseMap = () => {
 
   useEffect(() => {
     async function fetchPhotos() {
-      const data = await photoService.getPhotos<IPhoto[]>()
+      const data = await photoService.getPhotos<IPhoto[]>({ photo_type: "map" })
       setPhotos(data)
     }
     fetchPhotos()
@@ -38,7 +38,7 @@ const BaseMap = () => {
         attributionControl={false}
       >
         {photos.map((photo) => (
-          <Marker key={photo.id} longitude={photo.location.lng} latitude={photo.location.lat}>
+          <Marker key={photo.id} longitude={photo.location!.lng} latitude={photo.location!.lat}>
             <img
               src={photo.photo_url}
               alt="Photo marker"

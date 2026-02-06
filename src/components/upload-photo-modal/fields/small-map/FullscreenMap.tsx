@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { Dot, MapPinPlus, Minimize } from "lucide-react"
 import { Map, Marker } from "@vis.gl/react-maplibre"
+import type { ILocation } from "@/interfaces/ILocation"
 
 type FullScreenMapProps = {
-  coordinates: { lng: number; lat: number }
-  onChangeCoordinates: (coordinates: { lng: number; lat: number }) => void
-  savedMarker: { lng: number; lat: number } | undefined
-  onChangeSavedMarker: (coordinates: { lng: number; lat: number }) => void
+  coordinates: ILocation
+  onChangeCoordinates: (coordinates: ILocation) => void
+  savedMarker: ILocation | undefined
+  onChangeSavedMarker: (coordinates: ILocation) => void
   onClose: () => void
 }
 

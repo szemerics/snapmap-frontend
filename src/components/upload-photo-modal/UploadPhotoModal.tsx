@@ -8,24 +8,38 @@ import DatePicker from "./fields/DatePicker"
 import { CATEGORIES } from "@/constants/photoOptions"
 import FileUploader from "./fields/FileUploader"
 import { Button } from "../ui/button"
-import type { UploadPhotoFormData } from "./types"
 import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
 import GearInputs from "./fields/GearInputs"
 import SettingsInputs from "./fields/SettingsInputs"
-import { getDefaultUploadData, handleUploadDataChange } from "./helpers"
+import { formatDataBeforeSubmit, getDefaultUploadData, handleUploadDataChange } from "./helpers"
 import SmallMap from "./fields/SmallMap"
+import { photoService } from "@/services/photo.service"
 
 const snapPoints = [0.67, 1]
 
 const UploadPhotoModal = () => {
-  const { isOpen, closeUploadPhotoModal } = useUploadPhotoContext()
+  const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0])
 
-  const [uploadData, setUploadData] = useState<UploadPhotoFormData>(getDefaultUploadData())
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const payload = formatDataBeforeSubmit(uploadData)
+    const { imageFile, ...photoData } = payload
+    console.log("submitting")
 
-  const handleSubmit = () => {
-    console.log("submitted")
+    try {
+      closeUploadPhotoModal()
+      const formData = new FormData()
+      formData.append("uploaded_file", imageFile)
+      formData.append("photo_data", JSON.stringify(photoData))
+
+      await photoService.postPhoto(formData as any)
+
+      setUploadData(getDefaultUploadData())
+    } catch (error) {
+      console.error("Error uploading photo:", error)
+    }
   }
 
   const uploadForm = useMemo(
@@ -33,13 +47,15 @@ const UploadPhotoModal = () => {
       <form onSubmit={handleSubmit}>
         <FieldGroup>
           <Field>
-            <FieldLabel>Image</FieldLabel>
+            <FieldLabel className="">
+              Image <span className="text-destructive -ml-1">*</span>
+            </FieldLabel>
             <FileUploader uploadData={uploadData} setUploadData={setUploadData} />
           </Field>
 
           <Field>
             <FieldLabel>Location</FieldLabel>
-            <SmallMap />
+            <SmallMap uploadData={uploadData} setUploadData={setUploadData} />
           </Field>
 
           <FieldGroup className="flex-row">
@@ -47,7 +63,9 @@ const UploadPhotoModal = () => {
           </FieldGroup>
 
           <Field>
-            <FieldLabel htmlFor="category-input">Category</FieldLabel>
+            <FieldLabel htmlFor="category-input">
+              Category <span className="text-destructive -ml-1">*</span>
+            </FieldLabel>
             <SelectOther
               uploadData={uploadData}
               setUploadData={setUploadData}
@@ -82,7 +100,7 @@ const UploadPhotoModal = () => {
           </FieldGroup>
 
           <Field>
-            <Button id="submit-button" type="submit">
+            <Button id="submit-button" type="submit" onClick={handleSubmit}>
               Upload
             </Button>
             <FieldDescription className="text-center">Uploading takes a while due to security checks</FieldDescription>
@@ -90,7 +108,7 @@ const UploadPhotoModal = () => {
         </FieldGroup>
       </form>
     ),
-    [uploadData]
+    [uploadData, handleSubmit]
   )
 
   return (

@@ -8,13 +8,13 @@ export interface IPhoto {
   }
   photo_url: string
   cloudinary_public_id: string
-  location: {
+  location?: {
     lat: number
     lng: number
   }
   date_captured: string
-  category: string
-  gear: {
+  category?: string
+  gear?: {
     camera: {
       brand: string
       model: string
@@ -23,26 +23,26 @@ export interface IPhoto {
     lens: string
     extra_attachment: string
   }
-  settings_used: {
+  settings_used?: {
     iso: number
     shutter_speed: string
     aperture: string
   }
   date_posted: string
-  caption: string
+  caption?: string
   likes: number
   comments: any | null
 }
 
 export interface IUploadPhoto {
   imageFile: File
-  location: {
+  date_captured: string
+  location?: {
     lat: number
     lng: number
   }
-  date_captured: string
-  category: string
-  gear: {
+  category?: string
+  gear?: {
     camera: {
       brand: string
       model: string
@@ -51,11 +51,10 @@ export interface IUploadPhoto {
     lens: string
     extra_attachment: string
   }
-  settings_used: {
+  settings_used?: {
     iso: number
     shutter_speed: string
     aperture: string
   }
-  date_posted: string
-  caption: string
+  caption?: string
 }

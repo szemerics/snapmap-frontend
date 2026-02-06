@@ -22,7 +22,7 @@ const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
           type="number"
           min="1"
           placeholder="100"
-          value={uploadData.iso}
+          value={uploadData.iso ?? ""}
           onChange={(e) => handleUploadDataChange(uploadData, setUploadData, "iso", e.target.value)}
         />
       </Field>
