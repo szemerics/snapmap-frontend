@@ -1,21 +1,23 @@
 import { useEffect, useRef, useState } from "react"
-import { Dialog, DialogClose, DialogContent } from "../ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { ChevronLeft } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
 import Post from "../Post"
 import { photoService } from "@/services/photo.service"
+import type { IUser } from "@/interfaces/IUser"
 
 type ProfilePostsProps = {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
   selectedIndex: number
-  username: string
+  targetUser: IUser
 }
 
-const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePostsProps) => {
+const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser }: ProfilePostsProps) => {
+  const username = targetUser.username
   const [posts, setPosts] = useState<IPhoto[]>([])
   const postRef = useRef<(HTMLDivElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -66,6 +68,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePos
             ref={(element) => {
               postRef.current[index] = element
             }}
+            targetUser={targetUser}
           />
           {index != posts.length - 1 ? <Separator className="my-6" /> : null}
         </div>
@@ -84,7 +87,8 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePos
             <DialogClose className="absolute left-6 cursor-pointer">
               <ChevronLeft />
             </DialogClose>
-            <span>Posts</span>
+            <DialogTitle className="my-5 text-sm">Posts</DialogTitle>
+            <DialogDescription className="sr-only">Posts by {targetUser.username} photographer</DialogDescription>
           </div>
           <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
             <BuildPost />
@@ -101,7 +105,8 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, username }: ProfilePos
           <DrawerClose className="absolute left-6">
             <ChevronLeft />
           </DrawerClose>
-          <span className="my-5">Posts</span>
+          <DrawerTitle className="my-5 text-sm">Posts</DrawerTitle>
+          <DrawerDescription className="sr-only">Posts by {targetUser.username} photographer</DrawerDescription>
         </div>
         <div ref={containerRef} className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
           <BuildPost />

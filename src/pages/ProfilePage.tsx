@@ -13,6 +13,7 @@ const ProfilePage = () => {
   useEffect(() => {
     async function fetchProfile() {
       const response = await userService.getUsers<IUser[]>({ username })
+      console.log("xd res: ", response)
       const user = response[0]
       setTargetUser(user)
     }
@@ -26,8 +27,8 @@ const ProfilePage = () => {
 
   return (
     <>
-      <ProfileCard user={targetUser} />
-      <ProfilePhotos photoSummaries={targetUser.photo_summaries} username={targetUser.username} />
+      <ProfileCard targetUser={targetUser} />
+      <ProfilePhotos targetUser={targetUser} />
     </>
   )
 }

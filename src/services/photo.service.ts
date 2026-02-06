@@ -1,4 +1,3 @@
-import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import { apiRoutes } from "./api/api-routes"
 import { HttpService } from "./http.service"
 
@@ -6,11 +5,6 @@ type PhotoFilters = {
   photo_type?: "map" | "post"
   username?: string
   photo_id?: string
-}
-
-type PostParams = {
-  photo_data: IUploadPhoto
-  uploaded_file: File
 }
 
 export const photoService = {
@@ -23,5 +17,8 @@ export const photoService = {
         "Content-Type": "multipart/form-data",
       },
     })
+  },
+  deletePhoto<T>(params: any): Promise<T> {
+    return HttpService.delete(apiRoutes.photos, { params })
   },
 }

@@ -1,12 +1,13 @@
 import { useState } from "react"
 import ProfilePosts from "./ProfilePosts"
+import type { IUser } from "@/interfaces/IUser"
 
 type ProfilePhotosProps = {
-  photoSummaries: { photo_id: string; photo_url: string }[]
-  username: string
+  targetUser: IUser
 }
 
-const ProfilePhotos = ({ photoSummaries, username }: ProfilePhotosProps) => {
+const ProfilePhotos = ({ targetUser }: ProfilePhotosProps) => {
+  const photoSummaries = targetUser.photo_summaries
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number>(-1)
 
@@ -29,7 +30,7 @@ const ProfilePhotos = ({ photoSummaries, username }: ProfilePhotosProps) => {
         ))}
       </div>
 
-      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} username={username} />
+      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} targetUser={targetUser} />
     </>
   )
 }

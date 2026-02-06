@@ -9,6 +9,7 @@ import FeedPage from "./pages/FeedPage"
 import MapPage from "./pages/MapPage"
 import { UploadPhotoProvider } from "./context/UploadPhotoContext"
 import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
+import { AuthProvider } from "./context/AuthContext"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -61,10 +62,12 @@ const router = createBrowserRouter([
 export function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="snapmap-ui-theme">
-      <UploadPhotoProvider>
-        <RouterProvider router={router} />
-        <UploadPhotoModal />
-      </UploadPhotoProvider>
+      <AuthProvider>
+        <UploadPhotoProvider>
+          <RouterProvider router={router} />
+          <UploadPhotoModal />
+        </UploadPhotoProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

@@ -3,10 +3,10 @@ import { Avatar, AvatarImage } from "../ui/avatar"
 import type { IUser } from "@/interfaces/IUser"
 
 type ProfileCardProps = {
-  user: IUser
+  targetUser: IUser
 }
 
-const ProfileCard = ({ user }: ProfileCardProps) => {
+const ProfileCard = ({ targetUser }: ProfileCardProps) => {
   const Header = () => (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className="flex justify-center items-center w-full gap-4">
@@ -15,14 +15,14 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
           <span className="text-muted-foreground text-xs">Followers</span>
         </div>
         <Avatar size="lg">
-          <AvatarImage src={user.profile_picture_url}></AvatarImage>
+          <AvatarImage src={targetUser.profile_picture_url}></AvatarImage>
         </Avatar>
         <div className="flex flex-col w-full">
           <span>543</span>
           <span className="text-muted-foreground text-xs">Likes</span>
         </div>
       </div>
-      <h2 className="">{user.username}</h2>
+      <h2 className="">{targetUser.username}</h2>
     </div>
   )
 
@@ -32,7 +32,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
         <CardHeader>
           <Header />
         </CardHeader>
-        <CardContent className="text-muted-foreground text-center text-xs">{user.bio}</CardContent>
+        <CardContent className="text-muted-foreground text-center text-xs">{targetUser.bio}</CardContent>
       </Card>
     </>
   )
