@@ -4,17 +4,28 @@ import { ChevronLeft } from "lucide-react"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
 import Post from "../Post"
 import type { IPhoto } from "@/interfaces/IPhoto"
+import { Separator } from "../ui/separator"
 
 type PhotoModalProps = {
   isOpen: boolean
   setIsOpen: (open: boolean) => void
-  selectedPhoto: IPhoto
+  selectedPhotos: IPhoto[]
+  title: string
 }
 
-const PhotoModal = ({ isOpen, setIsOpen, selectedPhoto }: PhotoModalProps) => {
+const PhotoModal = ({ isOpen, setIsOpen, selectedPhotos, title }: PhotoModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
-  const BuildPost = () => <Post photo={selectedPhoto!} />
+  const BuildPost = () => (
+    <>
+      {selectedPhotos.map((photo, index) => (
+        <div key={photo.id}>
+          <Post photo={photo} />
+          {index !== selectedPhotos.length - 1 ? <Separator className="my-6" /> : null}
+        </div>
+      ))}
+    </>
+  )
 
   if (isDesktop) {
     return (
@@ -27,11 +38,11 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhoto }: PhotoModalProps) => {
             <DialogClose className="absolute left-6 cursor-pointer">
               <ChevronLeft />
             </DialogClose>
-            <DialogTitle className="my-5 text-sm">Posts</DialogTitle>
+            <DialogTitle className="my-5 text-sm">{title}</DialogTitle>
             <DialogDescription className="sr-only">
-              Photo by {selectedPhoto?.user_summary?.username} photographer
+              Photos by {selectedPhotos[0]?.user_summary?.username} photographer
             </DialogDescription>
-            <span>Photo</span>
+            <span>{title}</span>
           </div>
           <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
             <BuildPost />
@@ -48,9 +59,9 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhoto }: PhotoModalProps) => {
           <DrawerClose className="absolute left-6">
             <ChevronLeft />
           </DrawerClose>
-          <DrawerTitle className="my-5 text-sm">Photo</DrawerTitle>
+          <DrawerTitle className="my-5 text-sm">{title}</DrawerTitle>
           <DrawerDescription className="sr-only">
-            Photo by {selectedPhoto?.user_summary?.username} photographer
+            Photos by {selectedPhotos[0]?.user_summary?.username} photographer
           </DrawerDescription>
         </div>
         <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
