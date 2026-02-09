@@ -10,6 +10,7 @@ import MapPage from "./pages/MapPage"
 import { UploadPhotoProvider } from "./context/UploadPhotoContext"
 import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
 import { AuthProvider } from "./context/AuthContext"
+import { Toaster } from "@/components/ui/sonner"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -65,6 +66,7 @@ export function App() {
       <AuthProvider>
         <UploadPhotoProvider>
           <RouterProvider router={router} />
+          <Toaster />
           <UploadPhotoModal />
         </UploadPhotoProvider>
       </AuthProvider>

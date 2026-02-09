@@ -10,13 +10,13 @@ const ProfilePage = () => {
   const { username } = useParams()
   const [targetUser, setTargetUser] = useState<IUser>()
 
-  useEffect(() => {
-    async function fetchProfile() {
-      const response = await userService.getUsers<IUser[]>({ username })
-      const user = response[0]
-      setTargetUser(user)
-    }
+  async function fetchProfile() {
+    const response = await userService.getUsers<IUser[]>({ username })
+    const user = response[0]
+    setTargetUser(user)
+  }
 
+  useEffect(() => {
     fetchProfile()
   }, [username])
 
@@ -27,7 +27,7 @@ const ProfilePage = () => {
   return (
     <>
       <ProfileCard targetUser={targetUser} />
-      <ProfilePhotos targetUser={targetUser} />
+      <ProfilePhotos targetUser={targetUser} onPhotoDelete={fetchProfile} />
     </>
   )
 }

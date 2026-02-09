@@ -18,8 +18,15 @@ const FeedPage = () => {
   return (
     <div className="my-6">
       {posts.map((post, index) => (
-        <div key={index}>
-          <Post photo={post} />
+        <div key={post.id}>
+          <Post
+            photo={post}
+            onDelete={() => {
+              // Only UI update: safe as this only runs when the DELETE endpoint returns 200 OK
+              // However could be improved later
+              setPosts((prevPosts) => prevPosts.filter((item) => item.id !== post.id))
+            }}
+          />
           {index != posts.length - 1 ? <Separator className="my-6" /> : null}
         </div>
       ))}

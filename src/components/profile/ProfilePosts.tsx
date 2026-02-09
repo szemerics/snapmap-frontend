@@ -14,9 +14,10 @@ type ProfilePostsProps = {
   setIsOpen: (open: boolean) => void
   selectedIndex: number
   targetUser: IUser
+  onPhotoDelete: () => void
 }
 
-const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser }: ProfilePostsProps) => {
+const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser, onPhotoDelete }: ProfilePostsProps) => {
   const username = targetUser.username
   const [posts, setPosts] = useState<IPhoto[]>([])
   const postRef = useRef<(HTMLDivElement | null)[]>([])
@@ -57,7 +58,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser }: ProfileP
   const BuildPost = () => (
     <>
       {posts.map((post, index) => (
-        <div key={index}>
+        <div key={post.id}>
           <Post
             photo={post}
             onImageLoad={() => {
@@ -69,6 +70,15 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser }: ProfileP
               postRef.current[index] = element
             }}
             targetUser={targetUser}
+            onDelete={() => {
+              // Only UI update: safe as this only runs when the DELETE endpoint returns 200 OK
+              // However could be improved later
+              if (posts.length - 1 === 0) {
+                setIsOpen(false)
+              }
+              setPosts((prevPosts) => prevPosts.filter((item) => item.id !== post.id))
+              onPhotoDelete()
+            }}
           />
           {index != posts.length - 1 ? <Separator className="my-6" /> : null}
         </div>

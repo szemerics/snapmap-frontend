@@ -4,9 +4,10 @@ import type { IUser } from "@/interfaces/IUser"
 
 type ProfilePhotosProps = {
   targetUser: IUser
+  onPhotoDelete: () => void
 }
 
-const ProfilePhotos = ({ targetUser }: ProfilePhotosProps) => {
+const ProfilePhotos = ({ targetUser, onPhotoDelete }: ProfilePhotosProps) => {
   const photoSummaries = targetUser.photo_summaries
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState<number>(-1)
@@ -30,7 +31,13 @@ const ProfilePhotos = ({ targetUser }: ProfilePhotosProps) => {
         ))}
       </div>
 
-      <ProfilePosts isOpen={isOpen} setIsOpen={setIsOpen} selectedIndex={selectedIndex} targetUser={targetUser} />
+      <ProfilePosts
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selectedIndex={selectedIndex}
+        targetUser={targetUser}
+        onPhotoDelete={onPhotoDelete}
+      />
     </>
   )
 }

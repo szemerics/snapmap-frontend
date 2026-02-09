@@ -8,24 +8,34 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { photoService } from "@/services/photo.service"
 import type { IUser } from "@/interfaces/IUser"
 import { useAuthContext } from "@/context/AuthContext"
+import { toast } from "sonner"
 
 type PostProps = {
   photo: IPhoto
   onImageLoad?: () => void
   targetUser?: IUser
+  onDelete?: () => void
 }
 
-const handleImageDelete = async (photoId: string) => {
-  try {
-    await photoService.deletePhoto<string>(photoId)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-const Post = forwardRef<HTMLDivElement, PostProps>(({ photo, onImageLoad, targetUser }, ref) => {
+const Post = forwardRef<HTMLDivElement, PostProps>(({ photo, onImageLoad, targetUser, onDelete }, ref) => {
   const [showMoreIcon, setShowMoreIcon] = useState(false)
   const { currentUser } = useAuthContext()
+
+  const handleImageDelete = async (photoId: string) => {
+    try {
+      await toast.promise(photoService.deletePhoto<string>(photoId), {
+        position: "top-center",
+        loading: "Deleting image...",
+        success: () => {
+          onDelete?.()
+          return "Image has been deleted"
+        },
+        error: "Error while deleting the image",
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     if (targetUser?.id === currentUser?.id || currentUser?.role === "admin") {
