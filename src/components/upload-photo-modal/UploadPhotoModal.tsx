@@ -15,28 +15,37 @@ import SettingsInputs from "./fields/SettingsInputs"
 import { formatDataBeforeSubmit, getDefaultUploadData, handleUploadDataChange } from "./helpers"
 import SmallMap from "./fields/SmallMap"
 import { photoService } from "@/services/photo.service"
+import { toast } from "sonner"
 
 const snapPoints = [0.67, 1]
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
-  const [snap, setSnap] = useState<number | string | null>(snapPoints[0])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const payload = formatDataBeforeSubmit(uploadData)
     const { imageFile, ...photoData } = payload
-    console.log("submitting")
 
-    try {
-      closeUploadPhotoModal()
+    const submit = async () => {
       const formData = new FormData()
       formData.append("uploaded_file", imageFile)
       formData.append("photo_data", JSON.stringify(photoData))
 
       await photoService.postPhoto(formData as any)
+    }
 
-      setUploadData(getDefaultUploadData())
+    try {
+      closeUploadPhotoModal()
+      await toast.promise(submit, {
+        position: "top-center",
+        loading: "Uploading image...",
+        success: () => {
+          setUploadData(getDefaultUploadData())
+          return "Image has been uploaded"
+        },
+        error: "Error while uploading image",
+      })
     } catch (error) {
       console.error("Error uploading photo:", error)
     }
@@ -112,14 +121,7 @@ const UploadPhotoModal = () => {
   )
 
   return (
-    <Drawer
-      open={isOpen}
-      onOpenChange={closeUploadPhotoModal}
-      direction="bottom"
-      snapPoints={snapPoints}
-      activeSnapPoint={snap}
-      setActiveSnapPoint={setSnap}
-    >
+    <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
       <DrawerContent className="h-full max-h-screen!">
         <div className="w-full flex justify-between items-center px-6 py-4 border-b">
           <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
