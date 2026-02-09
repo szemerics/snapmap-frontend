@@ -18,7 +18,7 @@ export const photoService = {
       },
     })
   },
-  deletePhoto<T>(params: any): Promise<T> {
-    return HttpService.delete(apiRoutes.photos, { params })
+  deletePhoto<T>(photoId: string): Promise<T> {
+    return HttpService.delete(`${apiRoutes.photos}/${photoId}`)
   },
 }

@@ -13,7 +13,6 @@ const ProfilePage = () => {
   useEffect(() => {
     async function fetchProfile() {
       const response = await userService.getUsers<IUser[]>({ username })
-      console.log("xd res: ", response)
       const user = response[0]
       setTargetUser(user)
     }

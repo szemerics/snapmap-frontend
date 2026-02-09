@@ -15,9 +15,9 @@ type PostProps = {
   targetUser?: IUser
 }
 
-const handleImageDelete = async (photo_id: string) => {
+const handleImageDelete = async (photoId: string) => {
   try {
-    await photoService.deletePhoto<string>({ photo_id })
+    await photoService.deletePhoto<string>(photoId)
   } catch (error) {
     console.log(error)
   }
@@ -31,7 +31,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(({ photo, onImageLoad, target
     if (targetUser?.id === currentUser?.id || currentUser?.role === "admin") {
       setShowMoreIcon(true)
     }
-  }, [])
+  }, [targetUser, currentUser])
 
   return (
     <div ref={ref} className="flex flex-col gap-3">
