@@ -1,7 +1,7 @@
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { Dialog, DialogClose, DialogContent } from "../ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
 import { ChevronLeft } from "lucide-react"
-import { Drawer, DrawerClose, DrawerContent } from "../ui/drawer"
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
 import Post from "../Post"
 import type { IPhoto } from "@/interfaces/IPhoto"
 
@@ -27,7 +27,11 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhoto }: PhotoModalProps) => {
             <DialogClose className="absolute left-6 cursor-pointer">
               <ChevronLeft />
             </DialogClose>
-            <span>Posts</span>
+            <DialogTitle className="my-5 text-sm">Posts</DialogTitle>
+            <DialogDescription className="sr-only">
+              Photo by {selectedPhoto?.user_summary?.username} photographer
+            </DialogDescription>
+            <span>Photo</span>
           </div>
           <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
             <BuildPost />
@@ -44,7 +48,10 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhoto }: PhotoModalProps) => {
           <DrawerClose className="absolute left-6">
             <ChevronLeft />
           </DrawerClose>
-          <span className="my-5">Posts</span>
+          <DrawerTitle className="my-5 text-sm">Photo</DrawerTitle>
+          <DrawerDescription className="sr-only">
+            Photo by {selectedPhoto?.user_summary?.username} photographer
+          </DrawerDescription>
         </div>
         <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
           <BuildPost />
