@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react"
 import { Separator } from "../ui/separator"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
-import Post from "../Post"
+import Post from "../post/Post"
 import { photoService } from "@/services/photo.service"
 import type { IUser } from "@/interfaces/IUser"
 

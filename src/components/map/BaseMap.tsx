@@ -1,4 +1,5 @@
 import type { IPhoto } from "@/interfaces/IPhoto"
+import { useSearchParams } from "react-router-dom"
 import { Map, Marker, type MapRef } from "@vis.gl/react-maplibre"
 import "maplibre-gl/dist/maplibre-gl.css"
 import { useEffect, useState, useRef, useMemo } from "react"
@@ -14,11 +15,14 @@ const BaseMap = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedPhotos, setSelectedPhotos] = useState<IPhoto[]>([])
   const [modalTitle, setModalTitle] = useState("Photos near this area")
+  const [searchParams] = useSearchParams()
 
   // Cluster system
   const [clusters, setClusters] = useState<any[]>([])
   const [bounds, setBounds] = useState<Bounds | null>(null)
   const [zoom, setZoom] = useState(3.5)
+  const [initialViewSet, setInitialViewSet] = useState(false)
+  const [targetLocation, setTargetLocation] = useState<{ lat: number; lng: number } | null>(null)
 
   useEffect(() => {
     async function fetchPhotos() {
@@ -27,6 +31,26 @@ const BaseMap = () => {
     }
     fetchPhotos()
   }, [])
+
+  useEffect(() => {
+    const latParam = searchParams.get("lat")
+    const lngParam = searchParams.get("lng")
+
+    if (!latParam || !lngParam) {
+      setTargetLocation(null)
+      return
+    }
+
+    const lat = parseFloat(latParam)
+    const lng = parseFloat(lngParam)
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+      setTargetLocation(null)
+      return
+    }
+
+    setTargetLocation({ lat, lng })
+  }, [searchParams])
 
   const points: GeoJSON[] = useMemo(() => {
     return photos.map((p) => ({
@@ -85,7 +109,20 @@ const BaseMap = () => {
         mapStyle="public/styles/dark_matter_edited.json"
         attributionControl={false}
         onMove={() => updateMapState(mapRef, setBounds, setZoom)}
-        onLoad={() => updateMapState(mapRef, setBounds, setZoom)}
+        onLoad={() => {
+          updateMapState(mapRef, setBounds, setZoom)
+
+          if (targetLocation && !initialViewSet) {
+            const map = mapRef.current?.getMap()
+            if (map) {
+              map.flyTo({
+                center: [targetLocation.lng, targetLocation.lat],
+                zoom: 12,
+              })
+              setInitialViewSet(true)
+            }
+          }
+        }}
       >
         {clusters.map((cluster) => {
           const [longitude, latitude] = cluster.geometry.coordinates

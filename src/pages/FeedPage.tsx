@@ -1,4 +1,4 @@
-import Post from "@/components/Post"
+import Post from "@/components/post/Post"
 import { Separator } from "@/components/ui/separator"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { useEffect, useState } from "react"

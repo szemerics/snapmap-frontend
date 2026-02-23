@@ -2,7 +2,7 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
 import { ChevronLeft } from "lucide-react"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
-import Post from "../Post"
+import Post from "../post/Post"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { Separator } from "../ui/separator"
 
@@ -16,11 +16,11 @@ type PhotoModalProps = {
 const PhotoModal = ({ isOpen, setIsOpen, selectedPhotos, title }: PhotoModalProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
-  const BuildPost = () => (
+  const BuildPost = ({ showMapView }: { showMapView: boolean }) => (
     <>
       {selectedPhotos.map((photo, index) => (
         <div key={photo.id}>
-          <Post photo={photo} />
+          <Post photo={photo} showMapView={showMapView} />
           {index !== selectedPhotos.length - 1 ? <Separator className="my-6" /> : null}
         </div>
       ))}
@@ -45,7 +45,7 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhotos, title }: PhotoModalProp
             <span>{title}</span>
           </div>
           <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
-            <BuildPost />
+            <BuildPost showMapView={!title} />
           </div>
         </DialogContent>
       </Dialog>
@@ -65,7 +65,7 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhotos, title }: PhotoModalProp
           </DrawerDescription>
         </div>
         <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar pb-5">
-          <BuildPost />
+          <BuildPost showMapView={!title} />
         </div>
       </DrawerContent>
     </Drawer>
