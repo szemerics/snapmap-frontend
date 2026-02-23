@@ -25,7 +25,7 @@ const ProfileMenu = () => {
 
   return (
     <>
-      <div className="fixed bottom-20 right-2">
+      <div className="fixed top-4 right-2">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant={"secondary"} className="cursor-pointer size-10">

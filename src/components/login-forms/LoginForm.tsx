@@ -5,6 +5,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Link, useNavigate } from "react-router"
 import { authService } from "@/services/auth.service"
+import { toast } from "sonner"
 
 const LoginForm = () => {
   const navigate = useNavigate()
@@ -15,20 +16,16 @@ const LoginForm = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      const response = await authService.login<{ access_token: string }>(loginForm)
-      const { access_token } = response
-
-      localStorage.setItem("access_token", access_token)
-
-      navigate("/")
-    } catch (error: any) {
-      if (error.response?.status === 401) {
-        alert("Invalid email or password")
-      } else {
-        alert("An error occurred. Please try again.")
-      }
-    }
+    await toast.promise(authService.login<{ access_token: string }>(loginForm), {
+      position: "top-center",
+      loading: "Logging in...",
+      success: (response) => {
+        localStorage.setItem("access_token", response.access_token)
+        navigate("/")
+        return "Logged in successfully"
+      },
+      error: "Invalid email or password",
+    })
   }
 
   if (localStorage.getItem("access_token")) {

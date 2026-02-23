@@ -5,6 +5,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Link, useNavigate } from "react-router"
 import { authService } from "@/services/auth.service"
+import { toast } from "sonner"
 
 const RegisterForm = () => {
   const navigate = useNavigate()
@@ -17,14 +18,16 @@ const RegisterForm = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await authService.register(registerForm)
-      alert("Registration successful! Please log in.")
-      navigate("/login")
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || "An error occurred. Please try again."
-      alert(errorMessage)
-    }
+
+    await toast.promise(authService.register(registerForm), {
+      position: "top-center",
+      loading: "Registering...",
+      success: () => {
+        navigate("/login")
+        return "Registration successful! Please log in."
+      },
+      error: "An error occurred. Please try again.",
+    })
   }
 
   if (localStorage.getItem("access_token")) {
