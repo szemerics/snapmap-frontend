@@ -5,6 +5,7 @@ import type { IUser } from "@/interfaces/IUser"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { userService } from "@/services/user.service"
+import ProfileMenu from "@/components/profile/ProfileMenu"
 
 const ProfilePage = () => {
   const { username } = useParams()
@@ -28,6 +29,7 @@ const ProfilePage = () => {
     <>
       <ProfileCard targetUser={targetUser} />
       <ProfilePhotos targetUser={targetUser} onPhotoDelete={fetchProfile} />
+      <ProfileMenu />
     </>
   )
 }
