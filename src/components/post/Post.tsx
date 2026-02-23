@@ -12,6 +12,7 @@ import {
   Settings2,
   MapPin,
   Calendar,
+  Trash2Icon,
 } from "lucide-react"
 import { forwardRef, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
@@ -29,6 +30,17 @@ import { useAuthContext } from "@/context/AuthContext"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { formatDate } from "./helpers"
+import {
+  AlertDialog,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogMedia,
+} from "../ui/alert-dialog"
 
 type PostProps = {
   photo: IPhoto
@@ -41,6 +53,7 @@ type PostProps = {
 const Post = forwardRef<HTMLDivElement, PostProps>(
   ({ photo, onImageLoad, targetUser, onDelete, showMapView = true }, ref) => {
     const [showMoreIcon, setShowMoreIcon] = useState(false)
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     const { currentUser } = useAuthContext()
     const navigate = useNavigate()
@@ -144,65 +157,85 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
     }
 
     return (
-      <div ref={ref} className="flex flex-col gap-3">
-        <div className="flex items-center justify-between px-4">
-          <Link to={`/${photo.user_summary.username}`} className=" flex gap-2 items-center">
-            <Avatar size="sm">
-              <AvatarImage src={photo.user_summary.profile_picture_url} />
-            </Avatar>
-            {photo.user_summary.username}{" "}
-          </Link>
-          {showMoreIcon && (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <EllipsisVertical className="ml-auto" size={20} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Pencil className="mr-1" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleImageDelete(photo.id)}>
-                  <Trash2 className="text-destructive mr-1" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-        <img src={photo.photo_url} alt="" className="w-full h-auto object-contain" onLoad={onImageLoad} />
-        <div className="px-4">
-          <div className="flex gap-3 items-center">
-            <div className="flex gap-1 items-center">
-              <Heart size={20} className="mb-0.5" /> <span className="text-xs">{photo.likes}</span>
-            </div>
-            <div className="flex gap-1 items-center">
-              <MessageCircle size={20} className="mb-0.5" />{" "}
-              <span className="text-xs">{Array.isArray(photo.comments) ? photo.comments.length : 0}</span>
-            </div>
-            <div className="ms-auto text-xs flex gap-1 items-center">
-              <Calendar size={16} className="mb-0.5" />
-              {format(new Date(photo.date_captured), "PP")} at {format(new Date(photo.date_captured), "HH:mm")}
-            </div>
-          </div>
-          <div className="flex gap-1 items-center mt-3 flex-wrap">
-            <Badge variant={"secondary"} className="capitalize">
-              <Tag />
-              {photo.category}
-            </Badge>
-            {GearDropdown(photo)}
-            {SettingsDropdown(photo)}
-            {photo.location && showMapView && (
-              <Badge variant={"secondary"} className="cursor-pointer" onClick={() => handleMapView()}>
-                <MapPin />
-                Map View
-              </Badge>
+      <>
+        <div ref={ref} className="flex flex-col gap-3">
+          <div className="flex items-center justify-between px-4">
+            <Link to={`/${photo.user_summary.username}`} className=" flex gap-2 items-center">
+              <Avatar size="sm">
+                <AvatarImage src={photo.user_summary.profile_picture_url} />
+              </Avatar>
+              {photo.user_summary.username}{" "}
+            </Link>
+            {showMoreIcon && (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <EllipsisVertical className="ml-auto" size={20} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Pencil className="mr-1" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                    <Trash2 className="text-destructive mr-1" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
+          <img src={photo.photo_url} alt="" className="w-full h-auto object-contain" onLoad={onImageLoad} />
+          <div className="px-4">
+            <div className="flex gap-3 items-center">
+              <div className="flex gap-1 items-center">
+                <Heart size={20} className="mb-0.5" /> <span className="text-xs">{photo.likes}</span>
+              </div>
+              <div className="flex gap-1 items-center">
+                <MessageCircle size={20} className="mb-0.5" />{" "}
+                <span className="text-xs">{Array.isArray(photo.comments) ? photo.comments.length : 0}</span>
+              </div>
+              <div className="ms-auto text-xs flex gap-1 items-center">
+                <Calendar size={16} className="mb-0.5" />
+                {format(new Date(photo.date_captured), "PP")} at {format(new Date(photo.date_captured), "HH:mm")}
+              </div>
+            </div>
+            <div className="flex gap-1 items-center mt-3 flex-wrap">
+              <Badge variant={"secondary"} className="capitalize">
+                <Tag />
+                {photo.category}
+              </Badge>
+              {GearDropdown(photo)}
+              {SettingsDropdown(photo)}
+              {photo.location && showMapView && (
+                <Badge variant={"secondary"} className="cursor-pointer" onClick={() => handleMapView()}>
+                  <MapPin />
+                  Map View
+                </Badge>
+              )}
+            </div>
+          </div>
+          <span className="px-4 text-sm">{photo.caption}</span>
+          <span className="px-4 text-xs text-muted-foreground">{formatDate(photo.date_posted)}</span>
         </div>
-        <span className="px-4 text-sm">{photo.caption}</span>
-        <span className="px-4 text-xs text-muted-foreground">{formatDate(photo.date_posted)}</span>
-      </div>
+
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent size="sm">
+            <AlertDialogHeader>
+              <AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
+                <Trash2Icon />
+              </AlertDialogMedia>
+              <AlertDialogTitle>Delete post?</AlertDialogTitle>
+              <AlertDialogDescription>This will permanently delete this post.</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel variant="outline">Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="destructive" onClick={() => handleImageDelete(photo.id)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     )
   }
 )

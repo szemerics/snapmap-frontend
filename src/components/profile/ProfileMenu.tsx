@@ -47,6 +47,7 @@ const ProfileMenu = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <AlertDialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
