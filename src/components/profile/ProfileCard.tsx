@@ -15,7 +15,7 @@ const ProfileCard = ({ targetUser }: ProfileCardProps) => {
           <span className="text-muted-foreground text-xs">Followers</span>
         </div>
         <Avatar size="lg">
-          <AvatarImage src={targetUser.profile_picture_url}></AvatarImage>
+          <AvatarImage src={targetUser.profile_picture.url}></AvatarImage>
         </Avatar>
         <div className="flex flex-col w-full">
           <span>543</span>

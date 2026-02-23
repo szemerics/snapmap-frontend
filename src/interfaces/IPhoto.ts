@@ -3,7 +3,10 @@ export interface IPhoto {
   user_summary: {
     user_id: string
     username: string
-    profile_picture_url: string
+    profile_picture: {
+      url: string
+      public_id: string
+    }
     bio: string | null
   }
   photo_url: string

@@ -162,7 +162,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
           <div className="flex items-center justify-between px-4">
             <Link to={`/${photo.user_summary.username}`} className=" flex gap-2 items-center">
               <Avatar size="sm">
-                <AvatarImage src={photo.user_summary.profile_picture_url} />
+                <AvatarImage src={photo.user_summary.profile_picture.url} />
               </Avatar>
               {photo.user_summary.username}{" "}
             </Link>
