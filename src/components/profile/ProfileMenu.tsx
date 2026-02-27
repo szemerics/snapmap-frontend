@@ -13,9 +13,17 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
+import ProfileSettings from "./ProfileSettings"
+import type { IUser } from "@/interfaces/IUser"
 
-const ProfileMenu = () => {
+type ProfileMenuProps = {
+  targetUser: IUser
+}
+
+const ProfileMenu = ({ targetUser }: ProfileMenuProps) => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -26,20 +34,27 @@ const ProfileMenu = () => {
   return (
     <>
       <div className="fixed top-4 right-2">
-        <DropdownMenu>
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger>
             <Button variant={"secondary"} className="cursor-pointer size-10">
               <Menu className="size-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault()
+                setIsSettingsDialogOpen(true)
+                setIsDropdownOpen(false)
+              }}
+            >
               <Cog className="mr-1" /> Settings
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={(event) => {
                 event.preventDefault()
                 setIsLogoutDialogOpen(true)
+                setIsDropdownOpen(false)
               }}
             >
               <LogOut className="mr-1 text-destructive" /> Logout
@@ -64,6 +79,14 @@ const ProfileMenu = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {isSettingsDialogOpen && (
+        <ProfileSettings
+          isSettingsDialogOpen={isSettingsDialogOpen}
+          setIsSettingsDialogOpen={setIsSettingsDialogOpen}
+          targetUser={targetUser}
+        />
+      )}
     </>
   )
 }

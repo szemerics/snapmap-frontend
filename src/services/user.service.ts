@@ -9,4 +9,16 @@ export const userService = {
   getMyUser<T>(): Promise<T> {
     return HttpService.get(apiRoutes.myUser)
   },
+
+  updateProfile<T>(params?: { username?: string; bio?: string }): Promise<T> {
+    return HttpService.put(apiRoutes.updateProfile, params)
+  },
+
+  updateProfilePicture<T>(formData: FormData): Promise<T> {
+    return HttpService.put(apiRoutes.updateProfilePicture, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+  },
 }

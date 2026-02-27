@@ -29,7 +29,7 @@ const ProfilePage = () => {
     <>
       <ProfileCard targetUser={targetUser} />
       <ProfilePhotos targetUser={targetUser} onPhotoDelete={fetchProfile} />
-      <ProfileMenu />
+      <ProfileMenu targetUser={targetUser} />
     </>
   )
 }

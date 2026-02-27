@@ -42,7 +42,6 @@ const PhotoModal = ({ isOpen, setIsOpen, selectedPhotos, title }: PhotoModalProp
             <DialogDescription className="sr-only">
               Photos by {selectedPhotos[0]?.user_summary?.username} photographer
             </DialogDescription>
-            <span>{title}</span>
           </div>
           <div className="overflow-y-auto max-h-screen flex flex-col no-scrollbar">
             <BuildPost showMapView={!title} />

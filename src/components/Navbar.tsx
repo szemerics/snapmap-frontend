@@ -1,22 +1,12 @@
 import { MapPin, GalleryVerticalEnd, UserCircle, SearchIcon, ImagePlus } from "lucide-react"
 import { Card, CardContent } from "./ui/card"
 import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { userService } from "@/services/user.service"
-import type { IUser } from "@/interfaces/IUser"
 import { useUploadPhotoContext } from "@/context/UploadPhotoContext"
+import { useAuthContext } from "@/context/AuthContext"
 
 const Navbar = () => {
-  const [username, setUsername] = useState<string>("")
   const { openUploadPhotoModal } = useUploadPhotoContext()
-
-  useEffect(() => {
-    async function fetchCurrentUser() {
-      const user = await userService.getMyUser<IUser>()
-      setUsername(user.username)
-    }
-    fetchCurrentUser()
-  }, [])
+  const { currentUser } = useAuthContext()
 
   return (
     <Card className="w-full sm:max-w-sm sm:mx-auto rounded-none fixed bottom-0 left-0 right-0 z-50">
@@ -29,7 +19,7 @@ const Navbar = () => {
         <Link to={"/map"} className="cursor-pointer">
           <MapPin />
         </Link>
-        <Link to={`/${username}`} className="cursor-pointer">
+        <Link to={`/${currentUser?.username}`} className="cursor-pointer">
           <UserCircle />
         </Link>
       </CardContent>

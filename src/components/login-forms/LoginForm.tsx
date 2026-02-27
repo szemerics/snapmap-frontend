@@ -14,7 +14,7 @@ const LoginForm = () => {
     password: "",
   })
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     await toast.promise(authService.login<{ access_token: string }>(loginForm), {
       position: "top-center",
