@@ -1,5 +1,5 @@
 import { Field, FieldLabel } from "@/components/ui/field"
-import { type Dispatch, type SetStateAction } from "react"
+import { useEffect, type Dispatch, type SetStateAction } from "react"
 import SelectOther from "./SelectOther"
 import { Input } from "@/components/ui/input"
 import { APERTURES, SHUTTER_SPEEDS } from "@/constants/photoOptions"
@@ -12,6 +12,12 @@ type SettingsInputsProps = {
 }
 
 const SettingsInputs = ({ uploadData, setUploadData }: SettingsInputsProps) => {
+  useEffect(() => {
+    if (uploadData.iso === null || uploadData.iso === undefined) {
+      handleUploadDataChange(uploadData, setUploadData, "iso", uploadData.iso)
+    }
+  }, [uploadData.iso])
+
   return (
     <>
       <Field>

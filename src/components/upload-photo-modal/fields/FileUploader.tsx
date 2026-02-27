@@ -13,8 +13,10 @@ import { Upload, X } from "lucide-react"
 import { useCallback } from "react"
 
 import type { UploadPhotoFormData } from "../types"
-import { handleUploadDataChange } from "../helpers"
+import { fillFromExifData, formatApertureValueToFStop, getDefaultUploadData, handleUploadDataChange } from "../helpers"
 import type { Dispatch, SetStateAction } from "react"
+
+import exifr from "exifr"
 
 type FileUploaderProps = {
   uploadData: UploadPhotoFormData
@@ -41,8 +43,11 @@ const FileUploader = ({ uploadData, setUploadData }: FileUploaderProps) => {
         className="w-full"
         accept="image/*"
         value={uploadData.imageFile ? [uploadData.imageFile] : []}
-        onValueChange={(newFile) => {
-          handleUploadDataChange(uploadData, setUploadData, "imageFile", newFile[0])
+        onUpload={async (newFile) => {
+          const file = newFile[0]
+          await fillFromExifData(file, uploadData, setUploadData)
+
+          handleUploadDataChange(uploadData, setUploadData, "imageFile", file)
         }}
         onFileValidate={onFileValidate}
         disabled={!!uploadData.imageFile}

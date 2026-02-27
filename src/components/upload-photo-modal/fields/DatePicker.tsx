@@ -21,9 +21,15 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (uploadData.date_captured) {
       const date = new Date(uploadData.date_captured)
-      const [hours, minutes, seconds] = e.target.value.split(":").map(Number)
-      date.setHours(hours, minutes, seconds)
-      handleUploadDataChange(uploadData, setUploadData, "date_captured", date.toISOString())
+      const [hoursStr, minutesStr, secondsStr] = e.target.value.split(":")
+      const hours = Number(hoursStr)
+      const minutes = Number(minutesStr)
+      const seconds = secondsStr ? Number(secondsStr) : 0
+
+      if (!Number.isNaN(hours) && !Number.isNaN(minutes) && !Number.isNaN(seconds)) {
+        date.setHours(hours, minutes, seconds)
+        handleUploadDataChange(uploadData, setUploadData, "date_captured", date.toISOString())
+      }
     }
   }
 
@@ -68,8 +74,8 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
           id="time-picker-input"
           name="time"
           step="1"
-          defaultValue="10:30:00"
-          onChange={(e) => handleTimeChange(e)}
+          value={uploadData.date_captured ? format(new Date(uploadData.date_captured), "HH:mm:ss") : ""}
+          onChange={handleTimeChange}
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
       </Field>

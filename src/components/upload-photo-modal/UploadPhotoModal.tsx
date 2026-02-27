@@ -16,11 +16,22 @@ import { formatDataBeforeSubmit, getDefaultUploadData, handleUploadDataChange } 
 import SmallMap from "./fields/SmallMap"
 import { photoService } from "@/services/photo.service"
 import { toast } from "sonner"
+import {
+  AlertDialog,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "../ui/alert-dialog"
 
 const snapPoints = [0.67, 1]
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
+  const [isClearFormDialogOpen, setIsClearFormDialogOpen] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,7 +119,18 @@ const UploadPhotoModal = () => {
             <SettingsInputs uploadData={uploadData} setUploadData={setUploadData} />
           </FieldGroup>
 
+          <Separator />
           <Field>
+            <Button
+              id="clear-form-button"
+              variant="outline"
+              type="button"
+              className="mb-1"
+              onClick={() => setIsClearFormDialogOpen(true)}
+            >
+              Clear Form
+            </Button>
+
             <Button id="submit-button" type="submit" onClick={handleSubmit}>
               Upload
             </Button>
@@ -121,18 +143,44 @@ const UploadPhotoModal = () => {
   )
 
   return (
-    <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
-      <DrawerContent className="h-full max-h-screen!">
-        <div className="w-full flex justify-between items-center px-6 py-4 border-b">
-          <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
-          <DrawerDescription className="sr-only">Upload your photo and details here</DrawerDescription>
-          <DrawerClose className="cursor-pointer">
-            <X />
-          </DrawerClose>
-        </div>
-        <div className="overflow-y-auto flex-1 px-6 py-4">{uploadForm}</div>
-      </DrawerContent>
-    </Drawer>
+    <>
+      <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
+        <DrawerContent className="h-full max-h-screen!">
+          <div className="w-full flex justify-between items-center px-6 py-4 border-b">
+            <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
+            <DrawerDescription className="sr-only">Upload your photo and details here</DrawerDescription>
+            <DrawerClose className="cursor-pointer">
+              <X />
+            </DrawerClose>
+          </div>
+          <div className="overflow-y-auto flex-1 px-6 py-4">{uploadForm}</div>
+        </DrawerContent>
+      </Drawer>
+
+      <AlertDialog open={isClearFormDialogOpen} onOpenChange={setIsClearFormDialogOpen}>
+        <AlertDialogContent size="sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear form?</AlertDialogTitle>
+            <AlertDialogDescription>This will clear the form and reset it to the initial state.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setUploadData(getDefaultUploadData())
+                toast.success("Form cleared", {
+                  position: "top-center",
+                })
+                setIsClearFormDialogOpen(false)
+              }}
+              variant="destructive"
+            >
+              Clear Form
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
 

@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react"
 import type { UploadPhotoFormData } from "./types"
 import type { IUploadPhoto } from "@/interfaces/IPhoto"
+import exifr from "exifr"
 
 export const getDefaultUploadData = (): UploadPhotoFormData => ({
   imageFile: null,
@@ -20,14 +21,103 @@ export const getDefaultUploadData = (): UploadPhotoFormData => ({
 })
 
 export const handleUploadDataChange = (
-  uploadData: UploadPhotoFormData,
+  _uploadData: UploadPhotoFormData,
   setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>,
   field: keyof UploadPhotoFormData,
   value: any
 ): void => {
-  setUploadData({ ...uploadData, [field]: value })
+  setUploadData((prev) => ({
+    ...prev,
+    [field]: value,
+  }))
 }
 
+/**
+ * Formats the aperture value to the f-stop format
+ */
+export function formatApertureValueToFStop(apertureValue: number | null | undefined): string {
+  if (apertureValue === null || apertureValue === undefined) {
+    return ""
+  }
+
+  // EXIF ApertureValue is in APEX units: Av = log2(N^2), where N is the f-number.
+  // So N = sqrt(2^Av).
+  const fNumber = Math.sqrt(Math.pow(2, apertureValue))
+
+  if (!Number.isFinite(fNumber) || fNumber <= 0) {
+    return ""
+  }
+
+  const rounded = Math.round(fNumber * 10) / 10
+
+  return `f/${rounded.toFixed(1)}`
+}
+
+/**
+ * Formats the exif date time to the date captured format
+ */
+function formatExifDateTimeToDateCaptured(dateTime: string | Date): string {
+  if (!dateTime) {
+    return new Date().toISOString()
+  }
+
+  const parsed = typeof dateTime === "string" ? new Date(dateTime) : dateTime
+
+  if (isNaN(parsed.getTime())) {
+    return new Date().toISOString()
+  }
+
+  return parsed.toISOString()
+}
+
+/**
+ * Fills the upload data with the exif data from the file
+ */
+export async function fillFromExifData(
+  file: File,
+  uploadData: UploadPhotoFormData,
+  setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
+) {
+  const output = await exifr.parse(file)
+  console.log("output:", output)
+
+  if (output.Make) {
+    handleUploadDataChange(uploadData, setUploadData, "camera_brand", output.Make)
+  }
+  if (output.Model) {
+    handleUploadDataChange(uploadData, setUploadData, "camera_model", output.Model)
+  }
+  if (output.ISO) {
+    handleUploadDataChange(uploadData, setUploadData, "iso", output.ISO)
+  }
+  if (output.ApertureValue || output.MaxApertureValue) {
+    handleUploadDataChange(
+      uploadData,
+      setUploadData,
+      "aperture",
+      formatApertureValueToFStop(output.ApertureValue ?? output.MaxApertureValue) ?? ""
+    )
+  }
+  if (output.latitude && output.longitude) {
+    handleUploadDataChange(uploadData, setUploadData, "lat", output.latitude)
+    handleUploadDataChange(uploadData, setUploadData, "lng", output.longitude)
+  }
+  if (output.DateTimeOriginal) {
+    handleUploadDataChange(
+      uploadData,
+      setUploadData,
+      "date_captured",
+      formatExifDateTimeToDateCaptured(output.DateTimeOriginal)
+    )
+  }
+  if (output.LensModel) {
+    handleUploadDataChange(uploadData, setUploadData, "lens", output.LensModel)
+  }
+}
+
+/**
+ * Formats the data before submitting it to the backend
+ */
 export function formatDataBeforeSubmit(data: UploadPhotoFormData): IUploadPhoto {
   if (!data.imageFile) {
     throw new Error("Image file is required")

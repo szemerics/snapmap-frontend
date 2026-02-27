@@ -1,4 +1,4 @@
-import { useState, type Dispatch, type SetStateAction } from "react"
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import FullscreenMap from "./small-map/FullscreenMap"
 import NonFullscreenMap from "./small-map/NonFullscreenMap"
@@ -25,6 +25,13 @@ const SmallMap = ({ uploadData, setUploadData }: SmallMapProps) => {
       lng: coordinates.lng,
     }))
   }
+
+  useEffect(() => {
+    if (uploadData.lat !== null && uploadData.lng !== null) {
+      setCoordinates({ lng: uploadData.lng, lat: uploadData.lat })
+      setMapKey((prev) => prev + 1)
+    }
+  }, [uploadData.lat, uploadData.lng])
 
   return (
     <>
