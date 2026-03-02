@@ -1,3 +1,4 @@
+const MS_IN_MINUTE = 1000 * 60
 const MS_IN_HOUR = 1000 * 60 * 60
 const MS_IN_DAY = MS_IN_HOUR * 24
 const MS_IN_WEEK = MS_IN_DAY * 7
@@ -44,6 +45,11 @@ export function formatDate(date: string | Date): string {
 
   // under a week -> relative time
   if (diffMs < MS_IN_WEEK && diffMs >= 0) {
+    if (diffMs < MS_IN_HOUR) {
+      const minutes = Math.max(1, Math.floor(diffMs / MS_IN_MINUTE))
+      return `${minutes}m ago`
+    }
+
     if (diffMs < MS_IN_DAY) {
       const hours = Math.max(1, Math.floor(diffMs / MS_IN_HOUR))
       return `${hours}h ago`

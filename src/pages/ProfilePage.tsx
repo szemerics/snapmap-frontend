@@ -45,6 +45,7 @@ const ProfilePage = () => {
           <Skeleton className="h-32 w-full aspect-square rounded-none border border-background" />
           <Skeleton className="h-32 w-full aspect-square rounded-none border border-background" />
           <Skeleton className="h-32 w-full aspect-square rounded-none border border-background" />
+          <Skeleton className="h-32 w-full aspect-square rounded-none border border-background" />
         </div>
       </div>
     )
