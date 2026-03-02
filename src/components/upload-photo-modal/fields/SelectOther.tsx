@@ -104,7 +104,11 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
 
   return (
     <div className="flex gap-2 items-center text-base">
-      <Combobox items={constant}>
+      <Combobox
+        items={constant}
+        value={getSelectValue()}
+        onValueChange={(value) => handleSelectChange(selectField, value as string | null)}
+      >
         <ComboboxInput
           placeholder={`Select ${formatPlaceholder(selectField)}`}
           className={isOther ? "w-2/3" : "w-full"}
@@ -117,7 +121,6 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
                 key={item}
                 value={item}
                 className="mb-2 pointer-events-auto"
-                onClick={() => handleSelectChange(selectField, item as string | null)}
               >
                 {item}
               </ComboboxItem>
