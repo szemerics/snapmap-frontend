@@ -35,7 +35,7 @@ const ProfileMenu = ({ targetUser }: ProfileMenuProps) => {
     <>
       <div className="fixed top-4 right-2">
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Button variant={"secondary"} className="cursor-pointer size-10">
               <Menu className="size-5" />
             </Button>

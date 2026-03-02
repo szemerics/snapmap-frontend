@@ -14,3 +14,10 @@ export type UploadPhotoFormData = {
   extra_attachment: string
   caption: string
 }
+
+export type UploadFormErrors = {
+  imageFile?: string
+  date?: string
+  time?: string
+  category?: string
+}

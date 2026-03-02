@@ -1,8 +1,8 @@
 import { useUploadPhotoContext } from "@/context/UploadPhotoContext"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
 import { X } from "lucide-react"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
-import { useMemo, useState } from "react"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../ui/field"
+import { useEffect, useMemo, useState } from "react"
 import SelectOther from "./fields/SelectOther"
 import DatePicker from "./fields/DatePicker"
 import { CATEGORIES } from "@/constants/photoOptions"
@@ -12,7 +12,13 @@ import { Textarea } from "../ui/textarea"
 import { Separator } from "../ui/separator"
 import GearInputs from "./fields/GearInputs"
 import SettingsInputs from "./fields/SettingsInputs"
-import { formatDataBeforeSubmit, getDefaultUploadData, handleUploadDataChange } from "./helpers"
+import {
+  clearErrorIfFieldIsFilled,
+  formatDataBeforeSubmit,
+  getDefaultUploadData,
+  handleUploadDataChange,
+  validateUploadData,
+} from "./helpers"
 import SmallMap from "./fields/SmallMap"
 import { photoService } from "@/services/photo.service"
 import { toast } from "sonner"
@@ -26,15 +32,24 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "../ui/alert-dialog"
+import type { UploadFormErrors } from "./types"
 
 const snapPoints = [0.67, 1]
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
   const [isClearFormDialogOpen, setIsClearFormDialogOpen] = useState(false)
+  const [errors, setErrors] = useState<UploadFormErrors>({})
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    const validationErrors = await validateUploadData(uploadData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      return
+    }
+
     const payload = formatDataBeforeSubmit(uploadData)
     const { imageFile, ...photoData } = payload
 
@@ -62,15 +77,20 @@ const UploadPhotoModal = () => {
     }
   }
 
+  useEffect(() => {
+    clearErrorIfFieldIsFilled(uploadData, setErrors)
+  }, [uploadData.imageFile, uploadData.date_captured, uploadData.category, setErrors])
+
   const uploadForm = useMemo(
     () => (
       <form onSubmit={handleSubmit}>
         <FieldGroup>
-          <Field>
-            <FieldLabel className="">
+          <Field data-invalid={!!errors.imageFile}>
+            <FieldLabel>
               Image <span className="text-destructive -ml-1">*</span>
             </FieldLabel>
             <FileUploader uploadData={uploadData} setUploadData={setUploadData} />
+            <FieldError>{errors.imageFile}</FieldError>
           </Field>
 
           <Field>
@@ -79,10 +99,15 @@ const UploadPhotoModal = () => {
           </Field>
 
           <FieldGroup className="flex-row">
-            <DatePicker uploadData={uploadData} setUploadData={setUploadData} />
+            <DatePicker
+              uploadData={uploadData}
+              setUploadData={setUploadData}
+              dateError={errors.date}
+              timeError={errors.time}
+            />
           </FieldGroup>
 
-          <Field>
+          <Field data-invalid={!!errors.category}>
             <FieldLabel htmlFor="category-input">
               Category <span className="text-destructive -ml-1">*</span>
             </FieldLabel>
@@ -92,6 +117,7 @@ const UploadPhotoModal = () => {
               selectField="category"
               constant={CATEGORIES}
             />
+            <FieldError>{errors.category}</FieldError>
           </Field>
 
           <Field>
@@ -131,7 +157,7 @@ const UploadPhotoModal = () => {
               Clear Form
             </Button>
 
-            <Button id="submit-button" type="submit" onClick={handleSubmit}>
+            <Button id="submit-button" type="submit">
               Upload
             </Button>
             <FieldDescription className="text-center">Uploading takes a while due to security checks</FieldDescription>
@@ -168,6 +194,7 @@ const UploadPhotoModal = () => {
             <AlertDialogAction
               onClick={() => {
                 setUploadData(getDefaultUploadData())
+                setErrors({})
                 toast.success("Form cleared", {
                   position: "top-center",
                 })

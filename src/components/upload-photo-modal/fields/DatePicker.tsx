@@ -1,6 +1,6 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { useState, type Dispatch, type SetStateAction } from "react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
@@ -13,9 +13,11 @@ import { handleUploadDataChange } from "../helpers"
 type DatePickerProps = {
   uploadData: UploadPhotoFormData
   setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
+  dateError?: string
+  timeError?: string
 }
 
-const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
+const DatePicker = ({ uploadData, setUploadData, dateError, timeError }: DatePickerProps) => {
   const [openDate, setOpenDate] = useState(false)
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +37,7 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
 
   return (
     <>
-      <Field>
+      <Field data-invalid={!!dateError}>
         <FieldLabel htmlFor="date-picker-button">
           Date <span className="text-destructive -ml-1">*</span>
         </FieldLabel>
@@ -65,7 +67,7 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
           </PopoverContent>
         </Popover>
       </Field>
-      <Field className="w-32">
+      <Field className="w-32" data-invalid={!!timeError}>
         <FieldLabel htmlFor="time-picker-input">
           Time <span className="text-destructive -ml-1">*</span>
         </FieldLabel>
@@ -78,6 +80,7 @@ const DatePicker = ({ uploadData, setUploadData }: DatePickerProps) => {
           onChange={handleTimeChange}
           className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
         />
+        <FieldError>{timeError}</FieldError>
       </Field>
     </>
   )

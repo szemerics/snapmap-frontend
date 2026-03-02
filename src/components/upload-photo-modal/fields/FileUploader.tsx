@@ -13,10 +13,8 @@ import { Upload, X } from "lucide-react"
 import { useCallback } from "react"
 
 import type { UploadPhotoFormData } from "../types"
-import { fillFromExifData, formatApertureValueToFStop, getDefaultUploadData, handleUploadDataChange } from "../helpers"
+import { fillFromExifData, handleUploadDataChange } from "../helpers"
 import type { Dispatch, SetStateAction } from "react"
-
-import exifr from "exifr"
 
 type FileUploaderProps = {
   uploadData: UploadPhotoFormData

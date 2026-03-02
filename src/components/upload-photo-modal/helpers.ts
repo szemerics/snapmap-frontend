@@ -1,7 +1,9 @@
 import type { Dispatch, SetStateAction } from "react"
-import type { UploadPhotoFormData } from "./types"
+import type { UploadFormErrors, UploadPhotoFormData } from "./types"
 import type { IUploadPhoto } from "@/interfaces/IPhoto"
 import exifr from "exifr"
+import z from "zod"
+import { toast } from "sonner"
 
 export const getDefaultUploadData = (): UploadPhotoFormData => ({
   imageFile: null,
@@ -164,4 +166,82 @@ export function formatDataBeforeSubmit(data: UploadPhotoFormData): IUploadPhoto 
   }
 
   return payload
+}
+
+const uploadPhotoSchema = z.object({
+  imageFile: z.instanceof(File, {
+    message: "Image is required",
+  }),
+  date_captured: z
+    .string()
+    .min(1, {
+      message: "Date is required",
+    })
+    .refine((value) => !Number.isNaN(new Date(value).getTime()), {
+      message: "Date is required",
+    }),
+  category: z.string().min(1, {
+    message: "Category is required",
+  }),
+})
+
+export async function validateUploadData(data: UploadPhotoFormData): Promise<UploadFormErrors> {
+  try {
+    await uploadPhotoSchema.parse(data)
+    return {}
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const fieldErrors: UploadFormErrors = {}
+
+      for (const issue of error.issues) {
+        const fieldName = issue.path[0]
+
+        if (fieldName === "imageFile") {
+          fieldErrors.imageFile = issue.message
+        }
+
+        if (fieldName === "date_captured") {
+          fieldErrors.date = "Date is required"
+          fieldErrors.time = "Time is required"
+        }
+
+        if (fieldName === "category") {
+          fieldErrors.category = issue.message
+        }
+      }
+
+      toast.error("Please fill in all required fields", {
+        position: "top-center",
+      })
+
+      return fieldErrors
+    }
+
+    console.error("Unexpected validation error:", error)
+    return {}
+  }
+}
+
+export function clearErrorIfFieldIsFilled(
+  data: UploadPhotoFormData,
+  setErrors: Dispatch<SetStateAction<UploadFormErrors>>
+): void {
+  setErrors((prev) => {
+    const next = { ...prev }
+
+    if (data.imageFile && next.imageFile) {
+      delete next.imageFile
+    }
+
+    if (data.date_captured && (next.date || next.time)) {
+      delete next.date
+      delete next.time
+    }
+
+    if (data.category && next.category) {
+      delete next.category
+    }
+
+    return next
+  })
 }
