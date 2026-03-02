@@ -110,7 +110,7 @@ const ProfilePosts = ({ isOpen, setIsOpen, selectedIndex, targetUser, onPhotoDel
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} direction="right">
-      <DrawerContent className="w-screen! h-screen max-w-none rounded-none">
+      <DrawerContent className="w-screen! h-screen max-w-none border-none rounded-none!">
         <div className="w-full flex justify-center items-center">
           <DrawerClose className="absolute left-6">
             <ChevronLeft />

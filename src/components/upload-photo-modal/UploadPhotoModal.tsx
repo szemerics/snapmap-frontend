@@ -33,6 +33,9 @@ import {
   AlertDialogAction,
 } from "../ui/alert-dialog"
 import type { UploadFormErrors } from "./types"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
+import { ScrollArea } from "../ui/scroll-area"
 
 const snapPoints = [0.67, 1]
 
@@ -40,6 +43,7 @@ const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
   const [isClearFormDialogOpen, setIsClearFormDialogOpen] = useState(false)
   const [errors, setErrors] = useState<UploadFormErrors>({})
+  const isMobile = useMediaQuery("(max-width: 768px)")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -170,18 +174,39 @@ const UploadPhotoModal = () => {
 
   return (
     <>
-      <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
-        <DrawerContent className="h-full max-h-screen!">
-          <div className="w-full flex justify-between items-center px-6 py-4 border-b">
-            <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
-            <DrawerDescription className="sr-only">Upload your photo and details here</DrawerDescription>
-            <DrawerClose className="cursor-pointer">
-              <X />
-            </DrawerClose>
-          </div>
-          <div className="overflow-y-auto flex-1 px-6 py-4">{uploadForm}</div>
-        </DrawerContent>
-      </Drawer>
+      {isMobile ? (
+        <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
+          <DrawerContent className="h-full max-h-screen!">
+            <div className="w-full flex justify-between items-center px-6 py-4 border-b">
+              <div className="flex flex-col">
+                <DrawerTitle className="font-semibold">Upload Photo</DrawerTitle>
+                <DrawerDescription className="">Progress is saved automatically</DrawerDescription>
+              </div>
+              <DrawerClose className="cursor-pointer">
+                <X />
+              </DrawerClose>
+            </div>
+            <div className="overflow-y-auto flex-1 px-6 py-4">{uploadForm}</div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={isOpen} onOpenChange={closeUploadPhotoModal}>
+          <DialogContent className="flex flex-col max-h-[90vh] w-full sm:max-w-3xl " showCloseButton={false}>
+            <div className="w-full flex justify-between items-center px-6 py-4 border-b">
+              <div className="flex flex-col">
+                <DialogTitle className="font-semibold">Upload Photo</DialogTitle>
+                <DialogDescription className="">
+                  You may close this window, we save your progress in the background
+                </DialogDescription>
+              </div>
+              <DialogClose className="cursor-pointer">
+                <X />
+              </DialogClose>
+            </div>
+            <ScrollArea className="h-[75vh] px-6 py-4">{uploadForm}</ScrollArea>
+          </DialogContent>
+        </Dialog>
+      )}
 
       <AlertDialog open={isClearFormDialogOpen} onOpenChange={setIsClearFormDialogOpen}>
         <AlertDialogContent size="sm">

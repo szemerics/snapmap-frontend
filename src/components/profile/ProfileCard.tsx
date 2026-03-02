@@ -28,7 +28,7 @@ const ProfileCard = ({ targetUser }: ProfileCardProps) => {
 
   return (
     <>
-      <Card className="flex gap-1 sm:rounded-xl rounded-none">
+      <Card className="flex gap-1 rounded-none">
         <CardHeader>
           <Header />
         </CardHeader>
