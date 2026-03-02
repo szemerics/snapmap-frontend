@@ -1,8 +1,16 @@
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../../ui/select"
 import { Input } from "../../ui/input"
 
 import type { UploadPhotoFormData } from "../types"
+import { handleUploadDataChange } from "../helpers"
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox"
 
 type SelectProps = {
   uploadData: UploadPhotoFormData
@@ -46,37 +54,30 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
     }
   }, [fieldValue, selectField, constant])
 
-  const handleSelectChange = (field: string, value: any) => {
+  const handleSelectChange = (field: keyof UploadPhotoFormData, value: string | null) => {
     if (value === "Other") {
       setOtherFields((prev) => ({
         ...prev,
-        [field]: { isOther: true, customValue: prev[field]?.customValue || "" },
+        [field as string]: { isOther: true, customValue: prev[field as string]?.customValue || "" },
       }))
-      setUploadData((prev) => ({
-        ...prev,
-        [field]: otherFields[field]?.customValue || "",
-      }))
+
+      // clear value after switching to "Other"
+      handleUploadDataChange(uploadData, setUploadData, field, "")
     } else {
       setOtherFields((prev) => ({
         ...prev,
-        [field]: { isOther: false, customValue: "" },
+        [field as string]: { isOther: false, customValue: "" },
       }))
-      setUploadData((prev) => ({
-        ...prev,
-        [field]: value,
-      }))
+      handleUploadDataChange(uploadData, setUploadData, field, value ?? "")
     }
   }
 
-  const handleCustomValueChange = (field: string, value: string) => {
+  const handleCustomValueChange = (field: keyof UploadPhotoFormData, value: string) => {
     setOtherFields((prev) => ({
       ...prev,
-      [field]: { ...prev[field], customValue: value },
+      [field as string]: { ...prev[field as string], customValue: value },
     }))
-    setUploadData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+    handleUploadDataChange(uploadData, setUploadData, field, value)
   }
 
   const formatPlaceholder = (selectField: string) => {
@@ -103,29 +104,32 @@ const SelectOther = ({ uploadData, setUploadData, selectField, constant }: Selec
 
   return (
     <div className="flex gap-2 items-center text-base">
-      <Select
-        name={selectField}
-        value={getSelectValue() || undefined}
-        onValueChange={(value) => handleSelectChange(selectField, value)}
-      >
-        <SelectTrigger id={`${selectField}-input`} className={isOther ? "w-1/3" : "w-full"}>
-          <SelectValue placeholder={`Select ${formatPlaceholder(selectField)}`} />
-        </SelectTrigger>
-        <SelectContent className="max-h-80!" position="popper">
-          <SelectGroup>
-            {constant.map((option: string, idx) => (
-              <SelectItem key={idx} value={option} className="mb-2">
-                {option}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <Combobox items={constant}>
+        <ComboboxInput
+          placeholder={`Select ${formatPlaceholder(selectField)}`}
+          className={isOther ? "w-2/3" : "w-full"}
+        />
+        <ComboboxContent className="max-h-80!">
+          <ComboboxEmpty>No items found.</ComboboxEmpty>
+          <ComboboxList>
+            {(item) => (
+              <ComboboxItem
+                key={item}
+                value={item}
+                className="mb-2 pointer-events-auto"
+                onClick={() => handleSelectChange(selectField, item as string | null)}
+              >
+                {item}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
       {isOther && (
         <Input
           id={`${selectField}-custom-input`}
           name={`${selectField}_custom`}
-          className="w-2/3"
+          className="w-full"
           placeholder={`Enter custom ${formatPlaceholder(selectField)}`}
           value={otherFields[selectField]?.customValue || ""}
           onChange={(e) => handleCustomValueChange(selectField, e.target.value)}
