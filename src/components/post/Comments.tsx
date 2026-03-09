@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
-import { Button } from "../ui/button"
 import { Drawer, DrawerContent, DrawerDescription, DrawerTitle } from "../ui/drawer"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import type { IComment, IPhoto } from "@/interfaces/IPhoto"
 import { Avatar, AvatarImage } from "../ui/avatar"
 import { formatDate } from "./helpers"
 import { Separator } from "../ui/separator"
-import { Input } from "../ui/input"
-import { Send, XIcon } from "lucide-react"
 import { photoService } from "@/services/photo.service"
 import type { IUser } from "@/interfaces/IUser"
 import { useNavigate } from "react-router-dom"
+import CommentInputSection from "./CommentInputSection"
 
 type CommentsProps = {
   currentUser: IUser
@@ -34,9 +32,31 @@ const Comments = ({
   const isMobile = useMediaQuery("(max-width: 768px)")
   const commentInputRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
-    setComments(photo.comments)
-  }, [photo.comments])
+  const renderReplies = (parentComment: IComment) => {
+    const replies: React.ReactNode[] = []
+
+    const collectReplies = (comment: IComment) => {
+      comment.replies.forEach((reply) => {
+        replies.push(
+          <Comment
+            key={reply.comment_id}
+            comment={reply}
+            isActive={replyingToComment?.comment_id === reply.comment_id}
+            onReplyClick={() => handleReplyClick(reply)}
+            className="pl-16"
+          />
+        )
+
+        if (reply.replies.length > 0) {
+          collectReplies(reply)
+        }
+      })
+    }
+
+    collectReplies(parentComment)
+
+    return replies
+  }
 
   const handleComment = async () => {
     const trimmedComment = newComment.trim()
@@ -52,7 +72,8 @@ const Comments = ({
       }
 
       setComments(updatedPhoto.comments)
-      onCommentsUpdated?.(updatedPhoto.comments.length)
+      const replyCount = updatedPhoto.comments.reduce((total, comment) => total + comment.replies.length, 0)
+      onCommentsUpdated?.(updatedPhoto.comments.length + replyCount)
       setNewComment("")
       setReplyingToComment(null)
     } catch (error) {
@@ -60,15 +81,15 @@ const Comments = ({
     }
   }
 
-  const focusCommentInput = () => {
-    commentInputRef.current?.focus()
-  }
-
   const handleReplyClick = (comment: IComment) => {
     setReplyingToComment(comment)
-    focusCommentInput()
+    commentInputRef.current?.focus()
     setNewComment(`@${comment.user_summary.username} `)
   }
+
+  useEffect(() => {
+    setComments(photo.comments)
+  }, [photo.comments])
 
   return (
     <>
@@ -91,18 +112,9 @@ const Comments = ({
                     <Comment
                       comment={comment}
                       isActive={replyingToComment?.comment_id === comment.comment_id}
-                      onReplyClick={() => handleReplyClick(comment)}
+                      onReplyClick={handleReplyClick}
                     />
-                    {comment.replies.length > 0 &&
-                      comment.replies.map((reply) => (
-                        <Comment
-                          key={reply.comment_id}
-                          comment={reply}
-                          isActive={replyingToComment?.comment_id === reply.comment_id}
-                          onReplyClick={() => handleReplyClick(reply)}
-                          className="pl-16"
-                        />
-                      ))}
+                    {comment.replies.length > 0 && renderReplies(comment)}
                   </div>
                 )
               })}
@@ -110,39 +122,18 @@ const Comments = ({
 
             <Separator className="mb-2" />
 
-            <div className="flex flex-row items-end gap-2 px-6 py-4">
-              <Avatar className="mb-1">
-                <AvatarImage src={currentUser?.profile_picture.url} />
-              </Avatar>
-              <div className="relative w-full">
-                {replyingToComment && (
-                  <div
-                    className="text-xs text-muted-foreground flex flex-row items-center justify-start gap-1 mb-2"
-                    onClick={() => {
-                      setReplyingToComment(null)
-                      setNewComment("")
-                    }}
-                  >
-                    <XIcon className="size-4 cursor-pointer" />
-                    Replying to {replyingToComment.user_summary.username}
-                  </div>
-                )}
-                <Input
-                  ref={commentInputRef}
-                  name="comment-input"
-                  className="w-full text-sm pr-10 h-10"
-                  type="text"
-                  placeholder="Add a comment"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                />
-                {newComment.trim().length > 0 && (
-                  <Button className="absolute right-1 bottom-1" onClick={handleComment}>
-                    <Send className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            </div>
+            <CommentInputSection
+              currentUser={currentUser}
+              replyingToComment={replyingToComment}
+              newComment={newComment}
+              onChangeComment={setNewComment}
+              onClearReply={() => {
+                setReplyingToComment(null)
+                setNewComment("")
+              }}
+              onSubmit={handleComment}
+              inputRef={commentInputRef}
+            />
           </DrawerContent>
         </Drawer>
       ) : (
@@ -164,18 +155,9 @@ const Comments = ({
                     <Comment
                       comment={comment}
                       isActive={replyingToComment?.comment_id === comment.comment_id}
-                      onReplyClick={() => handleReplyClick(comment)}
+                      onReplyClick={handleReplyClick}
                     />
-                    {comment.replies.length > 0 &&
-                      comment.replies.map((reply) => (
-                        <Comment
-                          key={reply.comment_id}
-                          comment={reply}
-                          isActive={replyingToComment?.comment_id === reply.comment_id}
-                          onReplyClick={() => handleReplyClick(reply)}
-                          className="pl-16"
-                        />
-                      ))}
+                    {comment.replies.length > 0 && renderReplies(comment)}
                   </div>
                 )
               })}
@@ -183,39 +165,18 @@ const Comments = ({
 
             <Separator className="mb-2" />
 
-            <div className="flex flex-row items-end gap-2 px-6 py-4">
-              <Avatar className="mb-1">
-                <AvatarImage src={currentUser?.profile_picture.url} />
-              </Avatar>
-              <div className="relative w-full">
-                {replyingToComment && (
-                  <div
-                    className="text-xs text-muted-foreground flex flex-row items-center justify-start gap-1 mb-2"
-                    onClick={() => {
-                      setReplyingToComment(null)
-                      setNewComment("")
-                    }}
-                  >
-                    <XIcon className="size-4 cursor-pointer" />
-                    Replying to {replyingToComment.user_summary.username}
-                  </div>
-                )}
-                <Input
-                  ref={commentInputRef}
-                  name="comment-input"
-                  className="w-full text-sm pr-10 h-10"
-                  type="text"
-                  placeholder="Add a comment"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
-                />
-                {newComment.trim().length > 0 && (
-                  <Button className="absolute right-1 bottom-1" onClick={handleComment}>
-                    <Send className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            </div>
+            <CommentInputSection
+              currentUser={currentUser}
+              replyingToComment={replyingToComment}
+              newComment={newComment}
+              onChangeComment={setNewComment}
+              onClearReply={() => {
+                setReplyingToComment(null)
+                setNewComment("")
+              }}
+              onSubmit={handleComment}
+              inputRef={commentInputRef}
+            />
           </DialogContent>
         </Dialog>
       )}
@@ -228,7 +189,7 @@ export default Comments
 type CommentProps = {
   comment: IComment
   isActive: boolean
-  onReplyClick?: (commentId: string) => void
+  onReplyClick?: (comment: IComment) => void
   className?: string
 }
 
@@ -241,7 +202,7 @@ const Comment = ({ comment, isActive, onReplyClick, className }: CommentProps) =
   }
 
   const handleReplyClick = () => {
-    onReplyClick?.(comment.comment_id)
+    onReplyClick?.(comment)
   }
 
   return (

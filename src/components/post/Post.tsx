@@ -64,7 +64,8 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
       photo.likes.some((userSummary: IUserSummary) => userSummary.username === currentUser?.username)
     )
     const [likesCount, setLikesCount] = useState(photo.likes.length)
-    const [commentsCount, setCommentsCount] = useState(photo.comments.length)
+    const replyCount = photo.comments.reduce((total, comment) => total + comment.replies.length, 0)
+    const [commentsCount, setCommentsCount] = useState(photo.comments.length + replyCount)
 
     const handleImageDelete = async (photoId: string) => {
       try {
@@ -160,8 +161,8 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
     useEffect(() => {
       setIsLiked(photo.likes.some((userSummary) => userSummary.username === currentUser?.username))
       setLikesCount(photo.likes.length)
-      setCommentsCount(photo.comments.length)
-    }, [photo, currentUser?.username])
+      setCommentsCount(photo.comments.length + replyCount)
+    }, [photo, currentUser?.username, replyCount])
 
     const handleMapView = () => {
       if (!photo.location) return
@@ -231,7 +232,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
               <div className="flex gap-1 items-center">
                 <Heart
                   size={20}
-                  className={`mb-0.5 cursor-pointer ${isLiked ? "text-destructive fill-destructive" : "text-muted-foreground"}`}
+                  className={`mb-0.5 cursor-pointer ${isLiked ? "text-destructive fill-destructive" : "text-white"}`}
                   fill={isLiked ? "currentColor" : "none"}
                   stroke="currentColor"
                   onClick={handleLike}
