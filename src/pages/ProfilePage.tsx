@@ -6,22 +6,30 @@ import { useParams } from "react-router-dom"
 import { userService } from "@/services/user.service"
 import ProfileMenu from "@/components/profile/ProfileMenu"
 import { Skeleton } from "@/components/ui/skeleton"
+import NotFoundPage from "./NotFoundPage"
 
 const ProfilePage = () => {
   const { username } = useParams()
   const [targetUser, setTargetUser] = useState<IUser>()
+  const [isLoading, setIsLoading] = useState(true)
 
   async function fetchProfile() {
-    const response = await userService.getUsers<IUser[]>({ username })
-    const user = response[0]
-    setTargetUser(user)
+    try {
+      const response = await userService.getUsers<IUser[]>({ username })
+      const user = response[0]
+      setTargetUser(user)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
     fetchProfile()
   }, [username])
 
-  if (!targetUser) {
+  if (isLoading) {
     return (
       <div className="space-y-4 mt-3">
         <div className="flex flex-col items-center justify-center gap-4">
@@ -49,6 +57,10 @@ const ProfilePage = () => {
         </div>
       </div>
     )
+  }
+
+  if (!targetUser) {
+    return <NotFoundPage />
   }
 
   return (

@@ -11,6 +11,7 @@ import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
 import { AuthProvider } from "./context/AuthContext"
 import { Toaster } from "@/components/ui/sonner"
 import ProtectedLayout from "./components/ProtectedLayout"
+import NotFoundPage from "./pages/NotFoundPage"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -59,6 +60,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <MapPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <ProtectedRoute>
+        <NotFoundPage />
       </ProtectedRoute>
     ),
   },
