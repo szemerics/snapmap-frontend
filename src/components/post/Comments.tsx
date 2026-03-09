@@ -11,6 +11,7 @@ import { Input } from "../ui/input"
 import { Send, XIcon } from "lucide-react"
 import { photoService } from "@/services/photo.service"
 import type { IUser } from "@/interfaces/IUser"
+import { useNavigate } from "react-router-dom"
 
 type CommentsProps = {
   currentUser: IUser
@@ -232,18 +233,27 @@ type CommentProps = {
 }
 
 const Comment = ({ comment, isActive, onReplyClick, className }: CommentProps) => {
+  const navigate = useNavigate()
+
+  const handleUserClick = () => {
+    navigate(`/${comment.user_summary.username}`)
+    window.location.reload()
+  }
+
   const handleReplyClick = () => {
     onReplyClick?.(comment.comment_id)
   }
 
   return (
     <div className={`flex flex-row gap-2 -mx-6 px-6 py-2 ${isActive ? "bg-secondary" : ""} ${className}`}>
-      <Avatar className="mt-1 me-1">
+      <Avatar className="mt-1 me-1" onClick={handleUserClick}>
         <AvatarImage src={comment.user_summary.profile_picture.url} />
       </Avatar>
       <div className="flex flex-col gap-1">
         <div className="flex items-baseline gap-1">
-          {comment.user_summary.username}
+          <span className="cursor-pointer" onClick={handleUserClick}>
+            {comment.user_summary.username}
+          </span>
           <span className="text-xs text-muted-foreground">{formatDate(comment.comment_date)}</span>
         </div>
         {comment.content}
