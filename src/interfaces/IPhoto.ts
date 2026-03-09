@@ -1,14 +1,23 @@
+export interface IUserSummary {
+  id: string
+  username: string
+  profile_picture: {
+    url: string
+    public_id: string
+  }
+  bio: string | null
+}
+export interface IComment {
+  comment_id: string
+  user_summary: IUserSummary
+  comment_date: string
+  content: string
+  replies: IComment[]
+}
+
 export interface IPhoto {
   id: string
-  user_summary: {
-    user_id: string
-    username: string
-    profile_picture: {
-      url: string
-      public_id: string
-    }
-    bio: string | null
-  }
+  user_summary: IUserSummary
   photo_url: string
   cloudinary_public_id: string
   location?: {
@@ -33,8 +42,8 @@ export interface IPhoto {
   }
   date_posted: string
   caption?: string
-  likes: number
-  comments: any | null
+  likes: IUserSummary[]
+  comments: IComment[]
 }
 
 export interface IUploadPhoto {

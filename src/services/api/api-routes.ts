@@ -6,4 +6,5 @@ export const apiRoutes = {
   myUser: "/api/users/me",
   updateProfile: "/api/users/update-profile-data",
   updateProfilePicture: "/api/users/update-profile-picture",
+  likePhoto: "/api/photos/like/:photoId",
 }

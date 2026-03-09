@@ -1,4 +1,4 @@
-import type { IPhoto } from "@/interfaces/IPhoto"
+import type { IPhoto, IUserSummary } from "@/interfaces/IPhoto"
 import { Avatar, AvatarImage } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 import {
@@ -57,6 +57,11 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
 
     const { currentUser } = useAuthContext()
     const navigate = useNavigate()
+
+    const [isLiked, setIsLiked] = useState(
+      photo.likes.some((userSummary: IUserSummary) => userSummary.username === currentUser?.username)
+    )
+    const [likesCount, setLikesCount] = useState(photo.likes.length)
 
     const handleImageDelete = async (photoId: string) => {
       try {
@@ -149,11 +154,43 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
         </DropdownMenu>
       ) : null
 
+    useEffect(() => {
+      setIsLiked(photo.likes.some((userSummary) => userSummary.username === currentUser?.username))
+      setLikesCount(photo.likes.length)
+    }, [photo, currentUser?.username])
+
     const handleMapView = () => {
       if (!photo.location) return
 
       const { lat, lng } = photo.location
       navigate(`/map?lat=${lat}&lng=${lng}&photoId=${photo.id}`)
+    }
+
+    const handleLike = async () => {
+      if (!currentUser) return
+
+      const previousIsLiked = isLiked
+      const previousLikesCount = likesCount
+
+      if (previousIsLiked) {
+        setIsLiked(false)
+        setLikesCount((count) => count - 1)
+        try {
+          await photoService.unlikePhoto(photo.id)
+        } catch (error) {
+          setIsLiked(previousIsLiked)
+          setLikesCount(previousLikesCount)
+        }
+      } else {
+        setIsLiked(true)
+        setLikesCount((count) => count + 1)
+        try {
+          await photoService.likePhoto(photo.id)
+        } catch (error) {
+          setIsLiked(previousIsLiked)
+          setLikesCount(previousLikesCount)
+        }
+      }
     }
 
     return (
@@ -188,11 +225,17 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
           <div className="px-4">
             <div className="flex gap-3 items-center">
               <div className="flex gap-1 items-center">
-                <Heart size={20} className="mb-0.5" /> <span className="text-xs">{photo.likes}</span>
+                <Heart
+                  size={20}
+                  className={`mb-0.5 cursor-pointer ${isLiked ? "text-destructive fill-destructive" : "text-muted-foreground"}`}
+                  fill={isLiked ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  onClick={handleLike}
+                />
+                <span className="text-xs">{likesCount}</span>
               </div>
               <div className="flex gap-1 items-center">
-                <MessageCircle size={20} className="mb-0.5" />{" "}
-                <span className="text-xs">{Array.isArray(photo.comments) ? photo.comments.length : 0}</span>
+                <MessageCircle size={20} className="mb-0.5" /> <span className="text-xs">{photo.comments.length}</span>
               </div>
               <div className="ms-auto text-xs flex gap-1 items-center">
                 <Calendar size={16} className="mb-0.5" />
