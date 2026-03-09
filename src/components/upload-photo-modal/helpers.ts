@@ -81,7 +81,6 @@ export async function fillFromExifData(
   setUploadData: Dispatch<SetStateAction<UploadPhotoFormData>>
 ) {
   const output = await exifr.parse(file)
-  console.log("output:", output)
 
   if (output.Make) {
     handleUploadDataChange(uploadData, setUploadData, "camera_brand", output.Make)

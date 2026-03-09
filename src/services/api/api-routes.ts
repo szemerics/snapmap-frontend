@@ -7,4 +7,6 @@ export const apiRoutes = {
   updateProfile: "/api/users/update-profile-data",
   updateProfilePicture: "/api/users/update-profile-picture",
   likePhoto: "/api/photos/like/:photoId",
+  addComment: "/api/photos/comment/:photoId",
+  addReply: "/api/photos/comment/:photoId/reply/:commentId",
 }

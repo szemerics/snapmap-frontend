@@ -41,6 +41,7 @@ import {
   AlertDialogAction,
   AlertDialogMedia,
 } from "../ui/alert-dialog"
+import Comments from "./Comments"
 
 type PostProps = {
   photo: IPhoto
@@ -54,6 +55,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
   ({ photo, onImageLoad, targetUser, onDelete, showMapView = true }, ref) => {
     const [showMoreIcon, setShowMoreIcon] = useState(false)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+    const [isCommentsDialogOpen, setIsCommentsDialogOpen] = useState(false)
 
     const { currentUser } = useAuthContext()
     const navigate = useNavigate()
@@ -62,6 +64,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
       photo.likes.some((userSummary: IUserSummary) => userSummary.username === currentUser?.username)
     )
     const [likesCount, setLikesCount] = useState(photo.likes.length)
+    const [commentsCount, setCommentsCount] = useState(photo.comments.length)
 
     const handleImageDelete = async (photoId: string) => {
       try {
@@ -157,6 +160,7 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
     useEffect(() => {
       setIsLiked(photo.likes.some((userSummary) => userSummary.username === currentUser?.username))
       setLikesCount(photo.likes.length)
+      setCommentsCount(photo.comments.length)
     }, [photo, currentUser?.username])
 
     const handleMapView = () => {
@@ -234,8 +238,8 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
                 />
                 <span className="text-xs">{likesCount}</span>
               </div>
-              <div className="flex gap-1 items-center">
-                <MessageCircle size={20} className="mb-0.5" /> <span className="text-xs">{photo.comments.length}</span>
+              <div className="flex gap-1 items-center cursor-pointer" onClick={() => setIsCommentsDialogOpen(true)}>
+                <MessageCircle size={20} className="mb-0.5" /> <span className="text-xs">{commentsCount}</span>
               </div>
               <div className="ms-auto text-xs flex gap-1 items-center">
                 <Calendar size={16} className="mb-0.5" />
@@ -278,6 +282,14 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <Comments
+          currentUser={currentUser as IUser}
+          photo={photo}
+          isCommentsDialogOpen={isCommentsDialogOpen}
+          setIsCommentsDialogOpen={setIsCommentsDialogOpen}
+          onCommentsUpdated={setCommentsCount}
+        />
       </>
     )
   }

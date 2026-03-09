@@ -27,4 +27,12 @@ export const photoService = {
   unlikePhoto<T>(photoId: string): Promise<T> {
     return HttpService.delete(`${apiRoutes.likePhoto.replace(":photoId", photoId)}`)
   },
+  addComment<T>(photoId: string, content: string): Promise<T> {
+    return HttpService.post(`${apiRoutes.addComment.replace(":photoId", photoId)}`, { content })
+  },
+  addReply<T>(photoId: string, commentId: string, content: string): Promise<T> {
+    return HttpService.post(`${apiRoutes.addReply.replace(":photoId", photoId).replace(":commentId", commentId)}`, {
+      content,
+    })
+  },
 }
