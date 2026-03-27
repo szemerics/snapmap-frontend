@@ -11,6 +11,9 @@ export const photoService = {
   getPhotos<T>(params?: PhotoFilters): Promise<T> {
     return HttpService.get(apiRoutes.photos, { params })
   },
+  getFollowingPhotos<T>(): Promise<T> {
+    return HttpService.get(apiRoutes.followingPhotos)
+  },
   postPhoto<T>(formData: FormData): Promise<T> {
     return HttpService.post(apiRoutes.photos, formData, {
       headers: {
