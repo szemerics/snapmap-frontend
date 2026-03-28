@@ -7,12 +7,14 @@ import { useEffect, useMemo, useState } from "react"
 import { userService } from "@/services/user.service"
 import type { IFollowCounts, IFollowUser } from "@/interfaces/IFollow"
 import { toast } from "sonner"
+import type { FollowDialogType } from "./FollowDialog"
 
 type ProfileCardProps = {
   targetUser: IUser
+  openFollowDialog: (type: FollowDialogType) => void
 }
 
-const ProfileCard = ({ targetUser }: ProfileCardProps) => {
+const ProfileCard = ({ targetUser, openFollowDialog }: ProfileCardProps) => {
   const { currentUser } = useAuthContext()
   const [followCounts, setFollowCounts] = useState<IFollowCounts>({ followers: 0, following: 0 })
   const [isFollowing, setIsFollowing] = useState(false)
@@ -91,14 +93,14 @@ const ProfileCard = ({ targetUser }: ProfileCardProps) => {
   const Header = () => (
     <div className="flex flex-col items-center justify-center gap-4">
       <div className="flex justify-center items-center w-full gap-4">
-        <div className="flex flex-col w-full text-right">
+        <div className="flex flex-col w-full text-right cursor-pointer" onClick={() => openFollowDialog("follower")}>
           <span>{followCounts.followers}</span>
           <span className="text-muted-foreground text-xs">Followers</span>
         </div>
         <Avatar size="lg">
           <AvatarImage src={targetUser.profile_picture.url}></AvatarImage>
         </Avatar>
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full cursor-pointer" onClick={() => openFollowDialog("following")}>
           <span>{followCounts.following}</span>
           <span className="text-muted-foreground text-xs">Following</span>
         </div>

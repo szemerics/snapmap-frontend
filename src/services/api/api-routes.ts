@@ -11,6 +11,7 @@ export const apiRoutes = {
   userFollowers: "/api/users/:userId/followers",
   userFollowing: "/api/users/:userId/following",
   userFollowCounts: "/api/users/:userId/follow-counts",
+  userFollowState: "/api/users/:targetUserId/follow-state",
   likePhoto: "/api/photos/like/:photoId",
   addComment: "/api/photos/comment/:photoId",
   addReply: "/api/photos/comment/:photoId/reply/:commentId",

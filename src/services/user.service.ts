@@ -41,4 +41,8 @@ export const userService = {
   getFollowCounts<T>(userId: string): Promise<T> {
     return HttpService.get(apiRoutes.userFollowCounts.replace(":userId", userId))
   },
+
+  getFollowState<T>(targetUserId: string): Promise<T> {
+    return HttpService.get(apiRoutes.userFollowState.replace(":targetUserId", targetUserId))
+  },
 }
