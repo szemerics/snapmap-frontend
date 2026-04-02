@@ -5,6 +5,15 @@ type PhotoFilters = {
   photo_type?: "map" | "post"
   username?: string
   photo_id?: string
+  date_captured_from?: string
+  date_captured_to?: string
+  camera_brand?: string
+  camera_model?: string
+  camera_type?: string
+  lens?: string
+  iso?: number
+  shutter_speed?: string
+  aperture?: string
 }
 
 export const photoService = {

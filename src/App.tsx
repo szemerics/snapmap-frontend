@@ -6,6 +6,7 @@ import { Navigate } from "react-router-dom"
 import type { ReactNode } from "react"
 import FeedPage from "./pages/FeedPage"
 import MapPage from "./pages/MapPage"
+import SearchPage from "./pages/SearchPage"
 import { UploadPhotoProvider } from "./context/UploadPhotoContext"
 import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
 import { AuthProvider } from "./context/AuthContext"
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <FeedPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/search",
+    element: (
+      <ProtectedRoute>
+        <SearchPage />
       </ProtectedRoute>
     ),
   },
