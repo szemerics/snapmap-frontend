@@ -21,4 +21,28 @@ export const userService = {
       },
     })
   },
+
+  followUser<T>(targetUserId: string): Promise<T> {
+    return HttpService.post(apiRoutes.followUser.replace(":targetUserId", targetUserId))
+  },
+
+  unfollowUser<T>(targetUserId: string): Promise<T> {
+    return HttpService.delete(apiRoutes.followUser.replace(":targetUserId", targetUserId))
+  },
+
+  getFollowers<T>(userId: string): Promise<T> {
+    return HttpService.get(apiRoutes.userFollowers.replace(":userId", userId))
+  },
+
+  getFollowing<T>(userId: string): Promise<T> {
+    return HttpService.get(apiRoutes.userFollowing.replace(":userId", userId))
+  },
+
+  getFollowCounts<T>(userId: string): Promise<T> {
+    return HttpService.get(apiRoutes.userFollowCounts.replace(":userId", userId))
+  },
+
+  getFollowState<T>(targetUserId: string): Promise<T> {
+    return HttpService.get(apiRoutes.userFollowState.replace(":targetUserId", targetUserId))
+  },
 }

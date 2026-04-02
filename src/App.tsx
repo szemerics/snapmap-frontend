@@ -9,7 +9,7 @@ import MapPage from "./pages/MapPage"
 import SearchPage from "./pages/SearchPage"
 import { UploadPhotoProvider } from "./context/UploadPhotoContext"
 import UploadPhotoModal from "./components/upload-photo-modal/UploadPhotoModal"
-import { AuthProvider } from "./context/AuthContext"
+import { AuthProvider, useAuthContext } from "./context/AuthContext"
 import { Toaster } from "@/components/ui/sonner"
 import ProtectedLayout from "./components/ProtectedLayout"
 import NotFoundPage from "./pages/NotFoundPage"
@@ -20,11 +20,16 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { pathname } = useLocation()
+  const { isAuthLoading } = useAuthContext()
   const isAuthenticated = !!localStorage.getItem("access_token")
   const isMapPage = pathname === "/map"
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  if (isAuthLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 
   return (
@@ -39,63 +44,59 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   )
 }
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
-      <ProtectedRoute>
-        <FeedPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/search",
-    element: (
-      <ProtectedRoute>
-        <SearchPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/:username",
-    element: (
-      <ProtectedRoute>
-        <ProfilePage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "/map",
-    element: (
-      <ProtectedRoute>
-        <MapPage />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: "*",
-    element: (
-      <ProtectedRoute>
-        <NotFoundPage />
-      </ProtectedRoute>
-    ),
-  },
-  { path: "/login", element: <AuthPage mode="login" /> },
-  { path: "/register", element: <AuthPage mode="register" /> },
-])
-
 export function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="snapmap-ui-theme">
       <AuthProvider>
         <UploadPhotoProvider>
-          <RouterProvider router={router} />
+          <AppRouter />
           <Toaster />
           <UploadPhotoModal />
         </UploadPhotoProvider>
       </AuthProvider>
     </ThemeProvider>
   )
+}
+
+const AppRouter = () => {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <ProtectedRoute>
+          <FeedPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/:username",
+      element: (
+        <ProtectedRoute>
+          <ProfilePage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/map",
+      element: (
+        <ProtectedRoute>
+          <MapPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "*",
+      element: (
+        <ProtectedRoute>
+          <NotFoundPage />
+        </ProtectedRoute>
+      ),
+    },
+    { path: "/login", element: <AuthPage mode="login" /> },
+    { path: "/register", element: <AuthPage mode="register" /> },
+  ])
+
+  return <RouterProvider router={router} />
 }
 
 export default App

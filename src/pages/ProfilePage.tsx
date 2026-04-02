@@ -7,11 +7,19 @@ import { userService } from "@/services/user.service"
 import ProfileMenu from "@/components/profile/ProfileMenu"
 import { Skeleton } from "@/components/ui/skeleton"
 import NotFoundPage from "./NotFoundPage"
+import FollowDialog, { type FollowDialogType } from "@/components/profile/FollowDialog"
 
 const ProfilePage = () => {
   const { username } = useParams()
   const [targetUser, setTargetUser] = useState<IUser>()
   const [isLoading, setIsLoading] = useState(true)
+  const [isFollowDialogOpen, setIsFollowDialogOpen] = useState(false)
+  const [followDialogType, setFollowDialogType] = useState<FollowDialogType>("following")
+
+  const openFollowDialog = (type: FollowDialogType) => {
+    setFollowDialogType(type)
+    setIsFollowDialogOpen(true)
+  }
 
   async function fetchProfile() {
     try {
@@ -65,7 +73,13 @@ const ProfilePage = () => {
 
   return (
     <>
-      <ProfileCard targetUser={targetUser} />
+      <FollowDialog
+        type={followDialogType}
+        targetUser={targetUser}
+        isFollowDialogOpen={isFollowDialogOpen}
+        setIsFollowDialogOpen={setIsFollowDialogOpen}
+      />
+      <ProfileCard targetUser={targetUser} openFollowDialog={openFollowDialog} />
       <ProfilePhotos targetUser={targetUser} onPhotoDelete={fetchProfile} />
       <ProfileMenu targetUser={targetUser} />
     </>
