@@ -1,5 +1,5 @@
 export interface IUserSummary {
-  id: string
+  user_id: string
   username: string
   profile_picture: {
     url: string

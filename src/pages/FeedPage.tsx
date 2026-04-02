@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 import { photoService } from "@/services/photo.service"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
+import { useAuthContext } from "@/context/AuthContext"
 
 const FeedSkeleton = () => (
   <div className="flex flex-col gap-3">
@@ -44,6 +45,7 @@ const FeedPage = () => {
   const [posts, setPosts] = useState<IPhoto[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<"feed" | "following">("feed")
+  const { currentUser } = useAuthContext()
 
   useEffect(() => {
     async function fetchPosts() {
@@ -53,7 +55,9 @@ const FeedPage = () => {
           activeTab === "following"
             ? await photoService.getFollowingPhotos<IPhoto[]>()
             : await photoService.getPhotos<IPhoto[]>()
-        setPosts(data)
+
+        const filteredData = data.filter((photo) => photo.user_summary.user_id !== currentUser?.id) ?? data
+        setPosts(filteredData)
       } finally {
         setIsLoading(false)
       }

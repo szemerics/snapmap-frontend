@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 
 type AuthContextType = {
   currentUser: IUser | undefined
+  isAuthLoading: boolean
   updateCurrentUser: () => Promise<void>
 }
 
@@ -11,10 +12,18 @@ const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<IUser>()
+  const [isAuthLoading, setIsAuthLoading] = useState(true)
 
   async function fetchCurrentUser() {
-    const user = await userService.getMyUser<IUser>()
-    setCurrentUser(user)
+    try {
+      const user = await userService.getMyUser<IUser>()
+      setCurrentUser(user)
+    } catch (error) {
+      console.error("Failed to fetch current user:", error)
+      setCurrentUser(undefined)
+    } finally {
+      setIsAuthLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -22,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ currentUser, updateCurrentUser: fetchCurrentUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ currentUser, isAuthLoading, updateCurrentUser: fetchCurrentUser }}>{children}</AuthContext.Provider>
   )
 }
 
