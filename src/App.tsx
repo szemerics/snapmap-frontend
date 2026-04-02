@@ -69,6 +69,14 @@ const AppRouter = () => {
       ),
     },
     {
+      path: "/search",
+      element: (
+        <ProtectedRoute>
+          <SearchPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: "/:username",
       element: (
         <ProtectedRoute>
