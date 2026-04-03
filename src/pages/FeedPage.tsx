@@ -83,13 +83,13 @@ const FeedPage = () => {
   }
 
   return (
-    <div className="my-6">
+    <div className="mb-6">
       <FeedTabButtons activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {posts.length === 0 && activeTab === "following" && (
         <p className="text-muted-foreground text-sm px-4">No posts yet from users you follow.</p>
       )}
-      <div className="mt-16">
+      <div>
         {posts.map((post, index) => (
           <div key={post.id}>
             <Post
@@ -116,7 +116,7 @@ interface FeedTabButtonsProps {
 const FeedTabButtons = ({ activeTab, setActiveTab }: FeedTabButtonsProps) => {
   return (
     <div className="px-4 mb-4">
-      <div className="flex items-center gap-2 justify-center fixed w-full bg-background z-10 top-0 left-0 right-0 h-16">
+      <div className="sticky top-0 z-10 h-16 bg-background flex items-center justify-center gap-2">
         <Button
           type="button"
           size="lg"

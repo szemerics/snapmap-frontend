@@ -211,13 +211,9 @@ const Post = forwardRef<HTMLDivElement, PostProps>(
             {showMoreIcon && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <EllipsisVertical className="ml-auto" size={20} />
+                  <EllipsisVertical className="ml-auto cursor-pointer" size={20} />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <Pencil className="mr-1" />
-                    Edit
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
                     <Trash2 className="text-destructive mr-1" />
                     Delete
