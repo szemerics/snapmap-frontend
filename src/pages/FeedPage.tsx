@@ -83,7 +83,7 @@ const FeedPage = () => {
   }
 
   return (
-    <div className="my-6">
+    <div className="mb-6">
       <FeedTabButtons activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {posts.length === 0 && activeTab === "following" && (
