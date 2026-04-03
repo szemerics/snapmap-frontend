@@ -3,9 +3,10 @@ import Post from "@/components/post/Post"
 import type { IPhoto } from "@/interfaces/IPhoto"
 import { photoService } from "@/services/photo.service"
 import { Separator } from "@/components/ui/separator"
-import { ChevronUp } from "lucide-react"
+import { ChevronUp, SearchX } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import SearchModal, { type SearchFilters } from "@/components/SearchModal"
+import { useAuthContext } from "@/context/AuthContext"
 
 const SearchPage = () => {
   const [filters, setFilters] = useState<SearchFilters>({})
@@ -13,6 +14,7 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false)
+  const { currentUser } = useAuthContext()
 
   const handleInputChange = (key: keyof SearchFilters, value: string) => {
     setFilters((prev) => ({
@@ -52,7 +54,8 @@ const SearchPage = () => {
 
     try {
       const data = await photoService.getPhotos<IPhoto[]>(cleanedParams as any)
-      setResults(data)
+      const filteredData = data.filter((photo) => photo.user_summary.user_id !== currentUser?.id) ?? data
+      setResults(filteredData)
     } finally {
       setIsLoading(false)
     }
@@ -80,8 +83,9 @@ const SearchPage = () => {
       )}
 
       {!isLoading && showNoResultsMessage && (
-        <div className="flex flex-col items-center justify-center min-h-[80vh] text-sm text-muted-foreground text-center px-4">
-          No photos match these filters. Try changing them.
+        <div className="flex flex-col gap-3 items-center justify-center min-h-[80vh] text-sm text-muted-foreground text-center px-4">
+          <SearchX size={24} />
+          <span className="text-sm">No photos match these filters. Try changing them.</span>
         </div>
       )}
 
