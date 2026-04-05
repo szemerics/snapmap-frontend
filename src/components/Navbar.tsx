@@ -19,6 +19,7 @@ const Navbar = ({ variant }: NavbarProps) => {
   const isMobile = useMediaQuery("(max-width: 768px)")
   const { pathname } = useLocation()
   const isFeedPage = pathname === "/"
+  const isSearchPage = pathname === "/search"
   const isMapPage = pathname === "/map"
   const isProfilePage = pathname.startsWith(`/${currentUser?.username}`)
 
@@ -62,6 +63,14 @@ const Navbar = ({ variant }: NavbarProps) => {
               <ImagePlus /> Upload Photo
             </Button>
 
+            <Link to={"/search"}>
+              <Button
+                variant={isSearchPage ? "secondary" : "ghost"}
+                className="w-full justify-start cursor-pointer font-normal py-5"
+              >
+                <SearchIcon /> Search
+              </Button>
+            </Link>
             <Link to={"/"}>
               <Button
                 variant={isFeedPage ? "secondary" : "ghost"}

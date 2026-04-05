@@ -7,6 +7,7 @@ import { ChevronUp, SearchX } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import SearchModal, { type SearchFilters } from "@/components/SearchModal"
 import { useAuthContext } from "@/context/AuthContext"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 const SearchPage = () => {
   const [filters, setFilters] = useState<SearchFilters>({})
@@ -15,6 +16,7 @@ const SearchPage = () => {
   const [hasSearched, setHasSearched] = useState(false)
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false)
   const { currentUser } = useAuthContext()
+  const isMobile = useMediaQuery("(max-width: 768px)")
 
   const handleInputChange = (key: keyof SearchFilters, value: string) => {
     setFilters((prev) => ({
@@ -70,6 +72,12 @@ const SearchPage = () => {
 
   return (
     <div className="my-6 space-y-6">
+      {!isMobile && (
+        <Button className="w-full cursor-pointer" variant={"outline"} onClick={() => setIsSearchDialogOpen(true)}>
+          <span className="text-sm font-medium">Search Posts</span>
+        </Button>
+      )}
+
       {isLoading && (
         <div className="flex flex-col items-center justify-center min-h-[80vh] text-sm text-muted-foreground px-4">
           Searching photos...
@@ -105,16 +113,18 @@ const SearchPage = () => {
         </div>
       )}
 
-      <Button
-        className="fixed md:hidden bottom-17 left-0 right-0 z-40 w-full sm:max-w-sm sm:mx-auto rounded-none border-t border-border border-x-0 border-b-0 flex flex-col gap-0 h-auto bg-card py-5"
-        variant={"ghost"}
-        onClick={() => setIsSearchDialogOpen(true)}
-      >
-        <div className="absolute -top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted shadow-sm">
-          <ChevronUp className="h-4 w-4 text-foreground/70" />
-        </div>
-        <span className="text-sm font-medium">Search Posts</span>
-      </Button>
+      {isMobile && (
+        <Button
+          className="fixed bottom-17 left-0 right-0 z-40 w-full sm:max-w-sm sm:mx-auto rounded-none border-t border-border border-x-0 border-b-0 flex flex-col gap-0 h-auto bg-card py-5"
+          variant={"ghost"}
+          onClick={() => setIsSearchDialogOpen(true)}
+        >
+          <div className="absolute -top-3.5 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted shadow-sm">
+            <ChevronUp className="h-4 w-4 text-foreground/70" />
+          </div>
+          <span className="text-sm font-medium">Search Posts</span>
+        </Button>
+      )}
 
       <SearchModal
         isSearchDialogOpen={isSearchDialogOpen}
