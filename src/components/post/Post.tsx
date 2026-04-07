@@ -6,7 +6,6 @@ import {
   MessageCircle,
   EllipsisVertical,
   Trash2,
-  Pencil,
   Camera,
   Tag,
   Settings2,
