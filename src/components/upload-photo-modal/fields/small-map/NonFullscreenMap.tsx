@@ -66,7 +66,7 @@ const NonFullscreenMap = ({
             zoom: savedMarker ? 10 : 3.5,
           }}
           style={!isDesktop ? { opacity: "0.5", filter: "blur(1px)" } : undefined}
-          mapStyle="public/styles/dark_matter_edited.json"
+          mapStyle="/styles/dark_matter_edited.json"
           interactive={isDesktop ? true : false}
           attributionControl={false}
           onMove={(evt) => {

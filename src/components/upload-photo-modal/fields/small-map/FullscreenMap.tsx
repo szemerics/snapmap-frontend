@@ -46,7 +46,7 @@ const FullscreenMap = ({
           zoom: savedMarker ? 14 : 3.5,
         }}
         style={{ width: "100%", height: "100%" }}
-        mapStyle="public/styles/dark_matter_edited.json"
+        mapStyle="/styles/dark_matter_edited.json"
         attributionControl={false}
         onMove={(evt) => {
           const center = evt.viewState
