@@ -6,9 +6,12 @@ import { Input } from "../ui/input"
 import { Link, useNavigate } from "react-router"
 import { authService } from "@/services/auth.service"
 import { toast } from "sonner"
+import { useAuthContext } from "@/context/AuthContext"
+import type { IUser } from "@/interfaces/IUser"
 
 const RegisterForm = () => {
   const navigate = useNavigate()
+  const { setAccessToken, setCurrentUser } = useAuthContext()
   const [registerForm, setRegisterForm] = useState({
     username: "",
     email: "",
@@ -19,10 +22,12 @@ const RegisterForm = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    await toast.promise(authService.register(registerForm), {
+    await toast.promise(authService.register<{ access_token: string, user: IUser }>(registerForm), {
       position: "top-center",
       loading: "Registering...",
-      success: () => {
+      success: (response) => {
+        setAccessToken(response.access_token)
+        setCurrentUser(response.user)
         navigate("/login")
         return "Registration successful! Please log in."
       },
@@ -30,11 +35,7 @@ const RegisterForm = () => {
     })
   }
 
-  if (localStorage.getItem("access_token")) {
-    navigate("/")
-    return null
-  }
-
+  
   return (
     <div className={`flex flex-col gap-6`}>
       <Card>

@@ -19,4 +19,10 @@ export const authService = {
   register<T>(params?: authRegisterParams): Promise<T> {
     return HttpService.post(apiRoutes.register, params)
   },
+  logout<T>(): Promise<T> {
+    return HttpService.post(apiRoutes.logout)
+  },
+  refresh<T>(): Promise<T> {
+    return HttpService.post(apiRoutes.refresh)
+  }
 }

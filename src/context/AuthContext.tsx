@@ -1,37 +1,55 @@
 import type { IUser } from "@/interfaces/IUser"
-import { userService } from "@/services/user.service"
+import { authService } from "@/services/auth.service"
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import { setStoredAccessToken } from '@/lib/auth-token';
 
 type AuthContextType = {
-  currentUser: IUser | undefined
+  currentUser: IUser | null
+  setCurrentUser: (user: IUser | null) => void
+  accessToken: string | null
+  setAccessToken: (token: string | null) => void
   isAuthLoading: boolean
-  updateCurrentUser: () => Promise<void>
+  // updateCurrentUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [currentUser, setCurrentUser] = useState<IUser>()
+  const [currentUser, setCurrentUser] = useState<IUser | null>(null)
+  const [accessToken, setAccessToken] = useState<string | null>(null)
   const [isAuthLoading, setIsAuthLoading] = useState(true)
 
-  async function fetchCurrentUser() {
-    try {
-      const user = await userService.getMyUser<IUser>()
-      setCurrentUser(user)
-    } catch (error) {
-      console.error("Failed to fetch current user:", error)
-      setCurrentUser(undefined)
-    } finally {
-      setIsAuthLoading(false)
-    }
-  }
-
   useEffect(() => {
-    fetchCurrentUser()
+    const loadAuth = async () => {
+      try {
+        const { access_token: newToken, user } = await authService.refresh<{ access_token: string; user: IUser }>()
+        setAccessToken(newToken)
+        setCurrentUser(user)
+        setStoredAccessToken(newToken)
+      } catch (e) {
+        console.error("refresh failed", e)
+        setCurrentUser(null)
+        setAccessToken(null)
+        setStoredAccessToken(null)
+      } finally {
+        setIsAuthLoading(false)
+      }
+    }
+    loadAuth()
   }, [])
 
+
+  useEffect(() => {
+    setStoredAccessToken(accessToken);
+  }, [accessToken]);
+
+
   return (
-    <AuthContext.Provider value={{ currentUser, isAuthLoading, updateCurrentUser: fetchCurrentUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ accessToken, setAccessToken, currentUser, setCurrentUser, isAuthLoading }}
+    >
+      {children}
+    </AuthContext.Provider>
   )
 }
 

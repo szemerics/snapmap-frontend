@@ -6,9 +6,12 @@ import { Input } from "../ui/input"
 import { Link, useNavigate } from "react-router"
 import { authService } from "@/services/auth.service"
 import { toast } from "sonner"
+import { useAuthContext } from "@/context/AuthContext"
+import type { IUser } from "@/interfaces/IUser"
 
 const LoginForm = () => {
   const navigate = useNavigate()
+  const { setAccessToken, setCurrentUser } = useAuthContext()
   const [loginForm, setLoginForm] = useState({
     email: "",
     password: "",
@@ -16,11 +19,12 @@ const LoginForm = () => {
 
   const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await toast.promise(authService.login<{ access_token: string }>(loginForm), {
+    await toast.promise(authService.login<{ access_token: string, user: IUser }>(loginForm), {
       position: "top-center",
       loading: "Logging in...",
       success: (response) => {
-        localStorage.setItem("access_token", response.access_token)
+        setAccessToken(response.access_token)
+        setCurrentUser(response.user)
         navigate("/")
         return "Logged in successfully"
       },
@@ -28,10 +32,6 @@ const LoginForm = () => {
     })
   }
 
-  if (localStorage.getItem("access_token")) {
-    navigate("/")
-    return null
-  }
 
   return (
     <div className="flex flex-col gap-6">

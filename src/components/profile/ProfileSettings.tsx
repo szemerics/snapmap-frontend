@@ -31,12 +31,14 @@ type EditProfileFormData = {
 const ProfileSettings = ({ isSettingsDialogOpen, setIsSettingsDialogOpen, targetUser }: ProfileSettingsProps) => {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const navigate = useNavigate()
-  const { updateCurrentUser } = useAuthContext()
+  const { setCurrentUser } = useAuthContext()
   const [editProfileFormData, setEditProfileFormData] = useState<EditProfileFormData>({} as EditProfileFormData)
   const [isChanged, setIsChanged] = useState(false)
   const [uploadProfilePicture, setUploadProfilePicture] = useState<File | null>(null)
 
   const handleEditProfile = async () => {
+    let modifiedUser: IUser | null = null
+
     const submit = async () => {
       const formData = new FormData()
       if (uploadProfilePicture) {
@@ -47,7 +49,7 @@ const ProfileSettings = ({ isSettingsDialogOpen, setIsSettingsDialogOpen, target
       const hasBioChange = editProfileFormData.bio && editProfileFormData.bio !== targetUser.bio
 
       if (hasUsernameChange || hasBioChange) {
-        await userService.updateProfile({
+        modifiedUser = await userService.updateProfile<IUser>({
           username: editProfileFormData.username,
           bio: editProfileFormData.bio,
         })
@@ -61,8 +63,8 @@ const ProfileSettings = ({ isSettingsDialogOpen, setIsSettingsDialogOpen, target
       loading: "Updating profile...",
       success: async () => {
         setIsSettingsDialogOpen(false)
-        await updateCurrentUser()
-        navigate(`/${editProfileFormData.username ?? targetUser.username}`)
+        setCurrentUser(modifiedUser)
+        navigate(`/${modifiedUser?.username}`)
 
         return "Profile updated successfully"
       },

@@ -1,8 +1,7 @@
-import { createBrowserRouter, RouterProvider, useLocation } from "react-router-dom"
+import { createBrowserRouter, Navigate, RouterProvider, useLocation } from "react-router-dom"
 import { ThemeProvider } from "./components/theme/theme-provider"
 import AuthPage from "./pages/AuthPage"
 import ProfilePage from "./pages/ProfilePage"
-import { Navigate } from "react-router-dom"
 import type { ReactNode } from "react"
 import FeedPage from "./pages/FeedPage"
 import MapPage from "./pages/MapPage"
@@ -20,16 +19,15 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { pathname } = useLocation()
-  const { isAuthLoading } = useAuthContext()
-  const isAuthenticated = !!localStorage.getItem("access_token")
+  const { currentUser, isAuthLoading } = useAuthContext()
   const isMapPage = pathname === "/map"
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
-  }
 
   if (isAuthLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+  }
+
+  if (!currentUser) {
+    return <Navigate to="/login" replace />
   }
 
   return (

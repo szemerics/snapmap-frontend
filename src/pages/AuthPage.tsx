@@ -9,10 +9,6 @@ interface AuthPageProps {
 }
 
 const AuthPage = ({ mode }: AuthPageProps) => {
-  if (localStorage.getItem("access_token")) {
-    window.location.href = "/"
-    return null
-  }
 
   return (
     <div

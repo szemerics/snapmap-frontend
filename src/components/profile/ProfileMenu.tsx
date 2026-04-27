@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import ProfileSettings from "./ProfileSettings"
 import type { IUser } from "@/interfaces/IUser"
+import { authService } from "@/services/auth.service"
+import { useAuthContext } from "@/context/AuthContext"
 
 type ProfileMenuProps = {
   targetUser: IUser
@@ -24,10 +26,13 @@ const ProfileMenu = ({ targetUser }: ProfileMenuProps) => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const { setAccessToken, setCurrentUser } = useAuthContext()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    localStorage.removeItem("access_token")
+  const handleLogout = async () => {
+    setAccessToken(null)
+    setCurrentUser(null)
+    await authService.logout()
     navigate("/login")
   }
 
