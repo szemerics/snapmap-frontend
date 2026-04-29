@@ -12,7 +12,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import ProfileSettings from "./ProfileSettings"
 import type { IUser } from "@/interfaces/IUser"
 import { authService } from "@/services/auth.service"
@@ -26,14 +26,20 @@ const ProfileMenu = ({ targetUser }: ProfileMenuProps) => {
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false)
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const { setAccessToken, setCurrentUser } = useAuthContext()
+  const { setAccessToken, setCurrentUser, currentUser } = useAuthContext()
   const navigate = useNavigate()
+
+  const isOwnProfile = useMemo(() => currentUser?.id === targetUser.id, [currentUser?.id, targetUser.id])
 
   const handleLogout = async () => {
     setAccessToken(null)
     setCurrentUser(null)
     await authService.logout()
     navigate("/login")
+  }
+
+  if (!isOwnProfile) {
+    return null
   }
 
   return (

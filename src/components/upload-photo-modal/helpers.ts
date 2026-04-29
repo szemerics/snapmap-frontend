@@ -82,6 +82,10 @@ export async function fillFromExifData(
 ) {
   const output = await exifr.parse(file)
 
+  if (!output) {
+    return false
+  }
+
   if (output.Make) {
     handleUploadDataChange(uploadData, setUploadData, "camera_brand", output.Make)
   }
@@ -114,6 +118,8 @@ export async function fillFromExifData(
   if (output.LensModel) {
     handleUploadDataChange(uploadData, setUploadData, "lens", output.LensModel)
   }
+
+  return true
 }
 
 /**
