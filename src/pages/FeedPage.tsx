@@ -86,24 +86,27 @@ const FeedPage = () => {
     <div className="mb-6">
       <FeedTabButtons activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {posts.length === 0 && activeTab === "following" && (
-        <p className="text-muted-foreground text-sm px-4">No posts yet from users you follow.</p>
+      {posts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[80vh] text-sm text-muted-foreground text-center px-4">
+          No posts found.
+        </div>
+      ) : (
+        <>
+          {posts.map((post, index) => (
+            <div key={post.id}>
+              <Post
+                photo={post}
+                onDelete={() => {
+                  // Only UI update: safe as this only runs when the DELETE endpoint returns 200 OK
+                  // However could be improved later
+                  setPosts((prevPosts) => prevPosts.filter((item) => item.id !== post.id))
+                }}
+              />
+              {index != posts.length - 1 ? <Separator className="my-6" /> : null}
+            </div>
+          ))}
+        </>
       )}
-      <div>
-        {posts.map((post, index) => (
-          <div key={post.id}>
-            <Post
-              photo={post}
-              onDelete={() => {
-                // Only UI update: safe as this only runs when the DELETE endpoint returns 200 OK
-                // However could be improved later
-                setPosts((prevPosts) => prevPosts.filter((item) => item.id !== post.id))
-              }}
-            />
-            {index != posts.length - 1 ? <Separator className="my-6" /> : null}
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
