@@ -133,6 +133,12 @@ export const CATEGORIES = [
   "Fashion",
   "Food",
   "Product",
+  "Automotive",
+  "Trainspotting",
+  "Portrait",
+  "Landscape",
+  "Aerial",
+  "Long Exposure",
   "Other",
 ] as const
 

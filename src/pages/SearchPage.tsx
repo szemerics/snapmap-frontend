@@ -39,6 +39,7 @@ const SearchPage = () => {
 
     const params: Record<string, string | number | undefined> = {
       username: filters.username,
+      category: filters.category,
       date_captured_from: filters.date_captured_from,
       date_captured_to: filters.date_captured_to,
       camera_brand: filters.camera_brand,

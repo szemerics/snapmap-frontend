@@ -6,10 +6,11 @@ import { Field, FieldGroup, FieldLabel } from "./ui/field"
 import { Input } from "./ui/input"
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "./ui/combobox"
 import { Button } from "./ui/button"
-import { CAMERA_BRANDS, CAMERA_TYPES } from "@/constants/photoOptions"
+import { CAMERA_BRANDS, CAMERA_TYPES, CATEGORIES } from "@/constants/photoOptions"
 
 export type SearchFilters = {
   username?: string
+  category?: string
   date_captured_from?: string
   date_captured_to?: string
   camera_brand?: string
@@ -120,6 +121,14 @@ const SearchForm = ({
             onChange={(e) => handleInputChange("username", e.target.value)}
           />
         </Field>
+
+        <SearchSelect
+          label="Category"
+          value={filters.category ?? ""}
+          onChange={(val) => handleInputChange("category", val)}
+          options={CATEGORIES}
+          placeholder="Select category"
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <Field>

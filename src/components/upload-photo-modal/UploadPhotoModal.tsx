@@ -37,7 +37,7 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog"
 import { ScrollArea } from "../ui/scroll-area"
 
-const snapPoints = [0.67, 1]
+// const snapPoints = [0.67, 1]
 
 const UploadPhotoModal = () => {
   const { isOpen, closeUploadPhotoModal, uploadData, setUploadData } = useUploadPhotoContext()
@@ -175,7 +175,7 @@ const UploadPhotoModal = () => {
   return (
     <>
       {isMobile ? (
-        <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom" snapPoints={snapPoints}>
+        <Drawer open={isOpen} onOpenChange={closeUploadPhotoModal} direction="bottom">
           <DrawerContent className="h-full max-h-screen!">
             <div className="w-full flex justify-between items-center px-6 py-4 border-b">
               <div className="flex flex-col">
