@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field"
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../ui/field"
 import { Input } from "../ui/input"
 import { Link, useNavigate } from "react-router"
 import { authService } from "@/services/auth.service"
@@ -18,9 +18,17 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   })
+  const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (registerForm.password !== registerForm.confirmPassword) {
+      setConfirmPasswordError("Passwords do not match")
+      return
+    }
+
+    setConfirmPasswordError("")
 
     await toast.promise(authService.register<{ access_token: string, user: IUser }>(registerForm), {
       position: "top-center",
@@ -74,6 +82,7 @@ const RegisterForm = () => {
                   required
                   onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
                 />
+                  <FieldError>{confirmPasswordError}</FieldError>
               </Field>
               <Field>
                 <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
@@ -82,7 +91,8 @@ const RegisterForm = () => {
                   type="password"
                   required
                   onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
-                />
+                  />
+                  <FieldError>{confirmPasswordError}</FieldError>
                 <FieldDescription>Please confirm your password.</FieldDescription>
               </Field>
               <Field>
