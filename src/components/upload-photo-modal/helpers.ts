@@ -5,11 +5,23 @@ import exifr from "exifr"
 import z from "zod"
 import { toast } from "sonner"
 
+export function formatDateToLocalISOString(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  const hours = String(date.getHours()).padStart(2, "0")
+  const minutes = String(date.getMinutes()).padStart(2, "0")
+  const seconds = String(date.getSeconds()).padStart(2, "0")
+  const milliseconds = String(date.getMilliseconds()).padStart(3, "0")
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+}
+
 export const getDefaultUploadData = (): UploadPhotoFormData => ({
   imageFile: null,
   lat: null,
   lng: null,
-  date_captured: new Date().toISOString(),
+  date_captured: formatDateToLocalISOString(new Date()),
   category: "",
   camera_brand: "",
   camera_model: "",
@@ -60,16 +72,16 @@ export function formatApertureValueToFStop(apertureValue: number | null | undefi
  */
 function formatExifDateTimeToDateCaptured(dateTime: string | Date): string {
   if (!dateTime) {
-    return new Date().toISOString()
+    return formatDateToLocalISOString(new Date())
   }
 
   const parsed = typeof dateTime === "string" ? new Date(dateTime) : dateTime
 
   if (isNaN(parsed.getTime())) {
-    return new Date().toISOString()
+    return formatDateToLocalISOString(new Date())
   }
 
-  return parsed.toISOString()
+  return formatDateToLocalISOString(parsed)
 }
 
 /**

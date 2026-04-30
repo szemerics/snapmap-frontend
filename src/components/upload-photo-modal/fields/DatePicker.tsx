@@ -8,7 +8,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 
 import type { UploadPhotoFormData } from "../types"
-import { handleUploadDataChange } from "../helpers"
+import { formatDateToLocalISOString, handleUploadDataChange } from "../helpers"
 
 type DatePickerProps = {
   uploadData: UploadPhotoFormData
@@ -30,7 +30,7 @@ const DatePicker = ({ uploadData, setUploadData, dateError, timeError }: DatePic
 
       if (!Number.isNaN(hours) && !Number.isNaN(minutes) && !Number.isNaN(seconds)) {
         date.setHours(hours, minutes, seconds)
-        handleUploadDataChange(uploadData, setUploadData, "date_captured", date.toISOString())
+        handleUploadDataChange(uploadData, setUploadData, "date_captured", formatDateToLocalISOString(date))
       }
     }
   }
@@ -60,7 +60,12 @@ const DatePicker = ({ uploadData, setUploadData, dateError, timeError }: DatePic
               captionLayout="dropdown"
               defaultMonth={uploadData.date_captured ? new Date(uploadData.date_captured) : undefined}
               onSelect={(date) => {
-                handleUploadDataChange(uploadData, setUploadData, "date_captured", date ? date.toISOString() : null)
+                handleUploadDataChange(
+                  uploadData,
+                  setUploadData,
+                  "date_captured",
+                  date ? formatDateToLocalISOString(date) : null
+                )
                 setOpenDate(false)
               }}
             />
